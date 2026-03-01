@@ -94,8 +94,27 @@
 
     <select id="selectLatest">
         select
-            s.id, s.skill_log_title, s.created_datetime
+            s.id,
+            s.skill_log_title,
+            s.created_datetime,
+            s.skill_log_view_count,
+            m.member_name,
+            (
+                select vf.file_path
+                from view_experience_program_file vf
+                where vf.experience_program_id = s.experience_program_id
+                order by vf.id desc
+                limit 1
+            ) as experience_program_file_path,
+            (
+                select vf.file_name
+                from view_experience_program_file vf
+                where vf.experience_program_id = s.experience_program_id
+                order by vf.id desc
+                limit 1
+            ) as experience_program_file_name
         from tbl_skill_log s
+        join tbl_member m on m.id = s.member_id
         where s.skill_log_status = 'published'
         order by s.created_datetime desc
         limit #{limit}

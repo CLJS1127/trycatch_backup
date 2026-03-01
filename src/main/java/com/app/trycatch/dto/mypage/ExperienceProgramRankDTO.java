@@ -18,7 +18,11 @@ public class ExperienceProgramRankDTO {
     private String experienceProgramJob;
     private String experienceProgramDeadline;
     private int experienceProgramViewCount;
+    private int experienceProgramRecruitmentCount;
+    private int applicantCount;
     private Long corpId;
     private String corpCompanyName;
+    private String corpLogoFilePath;
+    private String corpLogoFileName;
     private List<ExperienceProgramFileDTO> experienceProgramFiles;
 }

@@ -122,10 +122,27 @@
     </select>
 
     <select id="selectLatest" resultType="QnaDTO">
-        select *
-        from view_qna_list
-        where qna_status = 'published'
-        order by id desc
+        select
+            v.*,
+            (
+                select f.file_path
+                from tbl_qna_file qf
+                join tbl_file f on qf.id = f.id
+                where qf.qna_id = v.id
+                order by qf.id desc
+                limit 1
+            ) as file_path,
+            (
+                select f.file_name
+                from tbl_qna_file qf
+                join tbl_file f on qf.id = f.id
+                where qf.qna_id = v.id
+                order by qf.id desc
+                limit 1
+            ) as file_name
+        from view_qna_list v
+        where v.qna_status = 'published'
+        order by v.id desc
         limit #{limit}
     </select>
 

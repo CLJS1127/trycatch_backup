@@ -1,4 +1,86 @@
+# 작업 요약 (2026-03-01, 추가)
+
+## 추가 작업 요약 (헤더 체험공고 이동 + 상세 페이지 동적화)
+
+### 요청 반영
+- 헤더 드롭다운의 `체험 정보`, `체험 공고` 클릭 시 `/experience/list`로 이동
+- 체험공고 상세 진입 경로를 `/experience/training-program/{id}` 기준으로 통일
+- 상세 페이지의 하드코딩 표시값을 제거하고, 프로그램 등록 데이터 기반으로 JS 바인딩
+- **HTML/CSS는 변경하지 않고 JS + 백엔드만 수정**
+
+### 수정 파일 (이번 요청 범위)
+- `src/main/java/com/app/trycatch/controller/experience/ExperienceProgramController.java`
+  - `/experience/program/{id}` → `/experience/training-program/{id}` 리다이렉트
+  - `/experience/training-program/{id}` 상세 뷰 제공
+  - `/experience/training-program?id=...` 지원
+  - `GET /experience/program/{id}/detail-data` JSON API 추가
+    - `program`, `isLoggedIn`, `canApply`, `hasApplied`, `memberPhone`, `memberEmail` 반환
+  - 기존 `/experience/detail?id=...`도 `/experience/training-program/{id}`로 통일
+- `src/main/resources/static/js/qna/header-event.js`
+  - 헤더/드롭다운의 `체험 정보`, `체험 공고` 링크를 `/experience/list`로 통일
+- `src/main/resources/static/js/experience/training-program.js`
+  - 상세 데이터 API fetch 기반 렌더링으로 재작성
+  - 상단 회사명/제목/모달 제목/직무/마감일/근무시간/상세영역(`detail-content`) 동적 반영
+  - `즉시 지원`/`지원하기`를 `/api/apply`와 연결
+  - 로그인/회원유형/기지원 여부에 따른 버튼 상태 제어
+
+### 동작 정리
+- 목록 이동: 헤더 체험 메뉴 어디서 눌러도 `/experience/list`
+- 상세 진입: `/experience/program/{id}` 요청 시 상세 표준 경로로 리다이렉트
+- 상세 데이터: 하드코딩 문구 대신 등록된 프로그램 데이터로 표시
+- 지원 동작: 실제 지원 API 호출 후 성공 시 `지원 완료` 상태 반영
+
+### 검증 결과
+- 컴파일:
+  - `./gradlew.bat compileJava --no-daemon`
+  - 결과: `BUILD SUCCESSFUL`
+- 실행 확인:
+  - `/experience/list` → `200`
+  - `/experience/training-program/5001` → `200`
+  - `/experience/program/5001/detail-data` → `200`
+  - `/experience/program/5001` → `302` 리다이렉트 확인
+
+### 경로 정정 메모
+- `main/list` 페이지는 없음
+- 실제 메인 페이지 경로는 `/main/main`
+
 # 작업 요약 (2026-03-01)
+
+## 추가 작업 요약 (experience 페이징/필터 재구현)
+
+### 요청 반영
+- `code_summary.md` 확인 후, 기존 레이어 구조(Controller → Service → DAO → Mapper) 유지
+- `experience/list`의 필터/정렬/검색/페이지네이션이 실제 DB 쿼리와 연동되도록 재구현
+- 변경 내용 본 파일(`summary.md`)에 기록
+
+### 수정 파일
+- `src/main/java/com/app/trycatch/common/pagination/Criteria.java`
+  - `offset`, `endPage` 계산 시 원본 `page` 대신 보정된 `this.page` 사용
+  - `page <= 0` 입력 시 음수 offset이 발생하던 문제 수정
+- `src/main/java/com/app/trycatch/service/experience/ExperienceProgramService.java`
+  - `status/sort/keyword/job` 정규화 로직 추가
+  - 허용 상태: `all/recruiting/draft/closed/cancelled`
+  - 허용 정렬: `latest/views/deadline`
+  - 총 페이지를 초과한 `page` 요청 시 마지막 페이지로 보정
+- `src/main/java/com/app/trycatch/controller/experience/ExperienceProgramController.java`
+  - 요청 파라미터 정규화 로직 추가
+  - 화면 모델(`status`, `sort`, `keyword`, `job`)과 실제 조회조건 일치 보장
+- `src/main/resources/templates/experience/list.html`
+  - 서버 렌더링 기반 목록 템플릿으로 재구성
+  - 필터(상태/직무/정렬/검색어), 카드 목록, 빈 결과, 페이지네이션 구현
+  - 페이지 이동 시 필터 파라미터 유지
+- `src/main/resources/static/js/experience/list.js`
+  - 필터 변경/검색/초기화/페이지 버튼 동작 구현
+  - 폼 기반 GET 요청으로 항상 서버 페이징 결과와 동기화
+
+### 구현 결과
+- 필터 처리
+  - 상태 + 직무 + 검색어 + 정렬 조합 검색 가능
+  - 검색/필터 변경 시 페이지를 1로 초기화
+- 페이징 처리
+  - 처음/이전/번호/다음/마지막 이동 지원
+  - 필터 상태를 유지한 채 페이지 이동
+  - 비정상 page 파라미터(0 이하, 최대 페이지 초과) 보정
 
 ## 이번 세션 목적
 - `main`, `experience/list`, `experience/training-program` 전체 로직 점검 및 실제 동작 반영
@@ -1063,3 +1145,85 @@ $env:GRADLE_USER_HOME='C:\\Users\\pigch\\Desktop\\trycatch_copy\\.gradle-user-ho
 - `./gradlew.bat compileJava --no-daemon` 성공
 - `GET /main/main` -> `200` 확인
 - 응답에 `기술블로그/QnA` 탭 및 동적 렌더링 블록 존재 확인
+
+---
+
+## 추가 요청 반영 (2026-03-01) - 메인 공고 섹션 DB 연동 + 인사이트 개편 + 하단 섹션 제거
+
+### 1) 요청 사항
+- `summary.md`, `code_summary.md` 기준으로 메인(`/main/main`) 공고 섹션 하드코딩 제거
+- 각 섹션을 DB 데이터/정렬 조건으로 노출
+- `게임분야 체험정보`를 `체험 준비 인사이트`로 개편
+- 맨 아래 `온라인 채용대행` 섹션 제거
+
+### 2) 적용한 변경
+1. 메인 공고 섹션용 DTO/Mapper/DAO/Service 확장
+   - `ExperienceProgramRankDTO` 필드 추가:
+     - `experienceProgramRecruitmentCount`, `applicantCount`
+     - `corpLogoFilePath`, `corpLogoFileName`
+   - `ExperienceProgramRankMapper/DAO` 메서드 추가:
+     - 조회수순, 마감임박순, 모집인원순, 지원율 낮은순, 최신등록순
+     - 최근 본 공고(회원 기준)
+   - `MainHomeService` 메서드 추가:
+     - `getDeadlineSoonPrograms`, `getHighRecruitmentPrograms`
+     - `getLowApplyRatePrograms`, `getNewestPrograms`
+     - `getRecentViewedPrograms`
+2. SQL(XML) 추가 및 보정
+   - 파일: `mapper/mypage/experienceProgramRankMapper.xml`
+   - 공통 컬럼/조인 SQL 분리(`baseColumns`, `baseFrom`)
+   - 신규 `<select>` 쿼리 추가:
+     - `selectTopByDeadlineSoon`
+     - `selectTopByRecruitmentCount`
+     - `selectTopByApplyRateAsc`
+     - `selectTopByCreatedDatetime`
+     - `selectRecentViewedByMemberId`
+   - XML 파싱 오류 수정:
+     - `<=` 를 `&lt;=` 로 변경 (line 111 근처)
+3. 컨트롤러 모델 바인딩 확장
+   - 파일: `MemberController.goMainPage()`
+   - 모델 추가:
+     - `companyLatestPrograms`, `deadlineSoonPrograms`
+     - `personalizedPrograms`(최근 본 공고 4개)
+     - `highRecruitmentPrograms`, `lowApplyRatePrograms`
+     - `newestPrograms`
+4. 메인 템플릿 섹션 동적화
+   - 파일: `templates/main/main.html`
+   - 아래 섹션을 `th:each` 기반 동적 렌더링으로 교체:
+     - `지금 가장 주목받는 공고예요!`(조회수순)
+     - `기업 체험 공채`(최신순 + 회사명/회사로고/D-day)
+     - `꼭 봐야할 공고예요!`(마감임박순)
+     - `나에게 꼭 맞는 체험 공고를 만나보세요`(최근 본 공고)
+     - `적극적으로 모집중인 공고예요!`(모집인원순)
+     - `이 공고 놓치지 마세요!`(지원율 낮은순)
+     - `새로운 기회를 찾아보세요!`(최신순)
+   - 상세 이동 링크 통일:
+     - `/experience/program/{id}`
+   - D-day 표시:
+     - `ChronoUnit.DAYS.between(...)` 계산 적용
+5. `게임분야 체험정보` 개편
+   - 섹션명을 `체험 준비 인사이트`로 변경
+   - 구성:
+     - `최신 기술블로그` 4건 (`/skill-log/detail?id=...`)
+     - `최신 QnA` 4건 (`/qna/detail?id=...`)
+   - 각 목록 `더보기` 연결:
+     - 기술블로그 `/skill-log/list`, QnA `/qna/list`
+6. 맨 아래 섹션 제거
+   - `온라인 채용대행`(`Cntnt_Oras`) 블록 전체 삭제
+
+### 3) 검증
+1. 컴파일
+- `./gradlew.bat compileJava --no-daemon` -> `BUILD SUCCESSFUL`
+2. 런타임
+- `/main/main` 응답 `200` 확인
+- 공고 섹션 문구 노출 확인:
+  - `지금 가장 주목받는 공고예요!`
+  - `기업 체험 공채`
+  - `꼭 봐야할 공고예요!`
+  - `나에게 꼭 맞는 체험 공고를 만나보세요`
+  - `적극적으로 모집중인 공고예요!`
+  - `이 공고 놓치지 마세요!`
+  - `새로운 기회를 찾아보세요!`
+- 인사이트 섹션 문구 노출 확인:
+  - `체험 준비 인사이트`
+  - `최신 기술블로그`
+  - `최신 QnA`

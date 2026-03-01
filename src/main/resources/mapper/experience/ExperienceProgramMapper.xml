@@ -59,6 +59,9 @@
         FROM tbl_experience_program ep
         JOIN tbl_member m ON ep.corp_id = m.id
         WHERE ep.corp_id = #{corpId}
+        <if test="selectedProgramId != null">
+            AND ep.id = #{selectedProgramId}
+        </if>
         <if test="status != null and status != ''">
             AND ep.experience_program_status = #{status}
         </if>
@@ -79,6 +82,9 @@
         FROM tbl_experience_program ep
         JOIN tbl_member m ON ep.corp_id = m.id
         WHERE ep.corp_id = #{corpId}
+        <if test="selectedProgramId != null">
+            AND ep.id = #{selectedProgramId}
+        </if>
         <if test="status != null and status != ''">
             AND ep.experience_program_status = #{status}
         </if>

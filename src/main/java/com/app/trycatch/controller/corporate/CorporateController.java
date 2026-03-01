@@ -215,8 +215,8 @@ public class CorporateController {
         dto.setCorpId(corpId);
         dto.setExperienceProgramStatus(ExperienceProgramStatus.RECRUITING);
         log.info("프로그램 등록 DTO: {}", dto);
-        corporateService.createProgram(dto, files != null ? files : new ArrayList<>(), addressDTO);
-        return "redirect:/corporate/program-management";
+        Long createdProgramId = corporateService.createProgram(dto, files != null ? files : new ArrayList<>(), addressDTO);
+        return "redirect:/corporate/program-management?selectedProgramId=" + createdProgramId;
     }
 
     // ── 프로그램 수정 ──────────────────────────────────────────────────
@@ -255,18 +255,20 @@ public class CorporateController {
             @RequestParam(defaultValue = "") String status,
             @RequestParam(defaultValue = "") String SrchKeyword,
             @RequestParam(defaultValue = "10") int TopCount,
+            @RequestParam(required = false) Long selectedProgramId,
             @RequestParam(defaultValue = "created_desc") String sort,
             Model model) {
         if (notLoggedIn()) return LOGIN_REDIRECT;
         if (notCorpMember()) return MAIN_REDIRECT;
         Long corpId = getCorpId();
         model.addAttribute("programWithPaging",
-                corporateService.getPrograms(corpId, page, TopCount, status, SrchKeyword, sort));
+                corporateService.getPrograms(corpId, page, TopCount, status, SrchKeyword, sort, selectedProgramId));
         model.addAttribute("programStats", corporateService.getProgramStats(corpId));
         model.addAttribute("currentStatus", status);
         model.addAttribute("currentKeyword", SrchKeyword);
         model.addAttribute("currentTopCount", TopCount);
         model.addAttribute("currentSort", sort);
+        model.addAttribute("selectedProgramId", selectedProgramId);
         model.addAttribute("corpInfo", corporateService.getCorpInfo(corpId));
         model.addAttribute("loginMember", session.getAttribute("member"));
         return "corporate/program-management";

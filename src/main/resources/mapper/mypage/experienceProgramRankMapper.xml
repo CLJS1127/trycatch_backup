@@ -1,71 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.app.trycatch.mapper.mypage.ExperienceProgramRankMapper">
+    <sql id="baseColumns">
+        ep.id as experienceProgramId,
+        ep.experience_program_title as experienceProgramTitle,
+        ep.experience_program_job as experienceProgramJob,
+        ep.experience_program_deadline as experienceProgramDeadline,
+        ep.experience_program_view_count as experienceProgramViewCount,
+        ep.experience_program_recruitment_count as experienceProgramRecruitmentCount,
+        coalesce(ap.applicant_count, 0) as applicantCount,
+        ep.corp_id as corpId,
+        c.corp_company_name as corpCompanyName,
+        (
+            select f.file_path
+            from tbl_corp_logo_file clf
+            join tbl_file f on clf.id = f.id
+            where clf.corp_id = c.id
+            order by f.id desc
+            limit 1
+        ) as corpLogoFilePath,
+        (
+            select f.file_name
+            from tbl_corp_logo_file clf
+            join tbl_file f on clf.id = f.id
+            where clf.corp_id = c.id
+            order by f.id desc
+            limit 1
+        ) as corpLogoFileName
+    </sql>
 
+    <sql id="baseFrom">
+        from tbl_experience_program ep
+        join tbl_corp c on ep.corp_id = c.id
+        left join (
+            select
+                a.experience_program_id,
+                count(*) as applicant_count
+            from tbl_apply a
+            where a.apply_status != 'cancelled'
+            group by a.experience_program_id
+        ) ap on ap.experience_program_id = ep.id
+    </sql>
 
     <select id="selectTopByViewCount" resultType="ExperienceProgramRankDTO">
         select
-            ep.id                          as experienceProgramId,
-            ep.experience_program_title,
-            ep.experience_program_job,
-            ep.experience_program_deadline,
-            ep.experience_program_view_count,
-            ep.corp_id,
-            c.corp_company_name
-        from tbl_experience_program ep
-        join tbl_corp c on ep.corp_id = c.id
+            <include refid="baseColumns"/>
+        <include refid="baseFrom"/>
         where ep.experience_program_status = 'recruiting'
-        order by ep.experience_program_view_count desc
+        order by ep.experience_program_view_count desc, ep.id desc
         limit #{limit}
     </select>
 
-
     <select id="selectTopPublicByViewCount" resultType="ExperienceProgramRankDTO">
         select
-            ep.id                          as experienceProgramId,
-            ep.experience_program_title,
-            ep.experience_program_job,
-            ep.experience_program_deadline,
-            ep.experience_program_view_count,
-            ep.corp_id,
-            c.corp_company_name
-        from tbl_experience_program ep
-        join tbl_corp c on ep.corp_id = c.id
+            <include refid="baseColumns"/>
+        <include refid="baseFrom"/>
         where ep.experience_program_status = 'recruiting'
           and c.corp_company_type = '공기업'
-        order by ep.experience_program_view_count desc
+        order by ep.experience_program_view_count desc, ep.id desc
         limit #{limit}
     </select>
 
     <select id="selectTopPublicByLatest" resultType="ExperienceProgramRankDTO">
         select
-            ep.id                          as experienceProgramId,
-            ep.experience_program_title,
-            ep.experience_program_job,
-            ep.experience_program_deadline,
-            ep.experience_program_view_count,
-            ep.corp_id,
-            c.corp_company_name
-        from tbl_experience_program ep
-        join tbl_corp c on ep.corp_id = c.id
+            <include refid="baseColumns"/>
+        <include refid="baseFrom"/>
         where ep.experience_program_status = 'recruiting'
+          and c.corp_company_type = '공기업'
         order by ep.updated_datetime desc, ep.id desc
         limit #{limit}
     </select>
 
     <select id="selectTopByUpdatedDatetime" resultType="ExperienceProgramRankDTO">
         select
-            ep.id                          as experienceProgramId,
-            ep.experience_program_title,
-            ep.experience_program_job,
-            ep.experience_program_deadline,
-            ep.experience_program_view_count,
-            ep.corp_id,
-            c.corp_company_name
-        from tbl_experience_program ep
-        join tbl_corp c on ep.corp_id = c.id
+            <include refid="baseColumns"/>
+        <include refid="baseFrom"/>
         where ep.experience_program_status = 'recruiting'
         order by ep.updated_datetime desc, ep.id desc
+        limit #{limit}
+    </select>
+
+    <select id="selectTopByDeadlineSoon" resultType="ExperienceProgramRankDTO">
+        select
+            <include refid="baseColumns"/>
+        <include refid="baseFrom"/>
+        where ep.experience_program_status = 'recruiting'
+        order by
+            case when ep.experience_program_deadline is null then 1 else 0 end asc,
+            ep.experience_program_deadline asc,
+            ep.id desc
+        limit #{limit}
+    </select>
+
+    <select id="selectTopByRecruitmentCount" resultType="ExperienceProgramRankDTO">
+        select
+            <include refid="baseColumns"/>
+        <include refid="baseFrom"/>
+        where ep.experience_program_status = 'recruiting'
+        order by ep.experience_program_recruitment_count desc, ep.id desc
+        limit #{limit}
+    </select>
+
+    <select id="selectTopByApplyRateAsc" resultType="ExperienceProgramRankDTO">
+        select
+            <include refid="baseColumns"/>
+        <include refid="baseFrom"/>
+        where ep.experience_program_status = 'recruiting'
+        order by
+            case
+                when ep.experience_program_recruitment_count &lt;= 0 then 999999
+                else coalesce(ap.applicant_count, 0) / cast(ep.experience_program_recruitment_count as decimal(10, 2))
+            end asc,
+            ep.experience_program_deadline asc,
+            ep.id desc
+        limit #{limit}
+    </select>
+
+    <select id="selectTopByCreatedDatetime" resultType="ExperienceProgramRankDTO">
+        select
+            <include refid="baseColumns"/>
+        <include refid="baseFrom"/>
+        where ep.experience_program_status = 'recruiting'
+        order by ep.created_datetime desc, ep.id desc
+        limit #{limit}
+    </select>
+
+    <select id="selectRecentViewedByMemberId" resultType="ExperienceProgramRankDTO">
+        select
+            <include refid="baseColumns"/>
+        <include refid="baseFrom"/>
+        join tbl_latest_watch_posting lw
+          on lw.experience_program_id = ep.id
+         and lw.member_id = #{memberId}
+        where ep.experience_program_status = 'recruiting'
+        order by lw.created_datetime desc, ep.id desc
         limit #{limit}
     </select>
 

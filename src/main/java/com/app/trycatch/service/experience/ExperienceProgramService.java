@@ -11,6 +11,7 @@ import com.app.trycatch.repository.experience.ExperienceProgramFileDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -21,8 +22,18 @@ public class ExperienceProgramService {
     private final ApplyDAO applyDAO;
 
     public ExperienceProgramListWithPagingDTO getList(int page, String status, String keyword, String job, String sort) {
+        status = normalizeStatus(status);
+        sort = normalizeSort(sort);
+        keyword = normalizeText(keyword);
+        job = normalizeText(job);
+
         int total = experienceProgramDAO.countPublic(status, keyword, job);
         Criteria criteria = new Criteria(page, total);
+
+        if (total > 0 && criteria.getPage() > criteria.getRealEnd()) {
+            criteria = new Criteria(criteria.getRealEnd(), total);
+        }
+
         List<ExperienceProgramDTO> programs = experienceProgramDAO.findPublic(criteria, status, keyword, job, sort);
 
         criteria.setHasMore(programs.size() > criteria.getRowCount());
@@ -40,6 +51,28 @@ public class ExperienceProgramService {
         dto.setCriteria(criteria);
         dto.setTotal(total);
         return dto;
+    }
+
+    private String normalizeStatus(String status) {
+        List<String> allowed = Arrays.asList("all", "recruiting", "draft", "closed", "cancelled");
+        if (status == null) {
+            return "all";
+        }
+        String normalized = status.trim().toLowerCase();
+        return allowed.contains(normalized) ? normalized : "all";
+    }
+
+    private String normalizeSort(String sort) {
+        List<String> allowed = Arrays.asList("latest", "views", "deadline");
+        if (sort == null) {
+            return "latest";
+        }
+        String normalized = sort.trim().toLowerCase();
+        return allowed.contains(normalized) ? normalized : "latest";
+    }
+
+    private String normalizeText(String value) {
+        return value == null ? "" : value.trim();
     }
 
     public ExperienceProgramDTO getDetail(Long id) {

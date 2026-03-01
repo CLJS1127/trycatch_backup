@@ -25,8 +25,8 @@ public class Criteria {
         pageCount = 10;
         count = rowCount + 1;
         this.page = Math.max(1, page);
-        offset = (page - 1) * rowCount;
-        endPage = (int)(Math.ceil(page / (double)pageCount) * pageCount);
+        offset = (this.page - 1) * rowCount;
+        endPage = (int)(Math.ceil(this.page / (double)pageCount) * pageCount);
         startPage = endPage - pageCount + 1;
         realEnd = (int)(Math.ceil(total / (double)rowCount));
         endPage = Math.min(endPage, Math.max(1, realEnd));

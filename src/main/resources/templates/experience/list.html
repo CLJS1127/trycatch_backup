@@ -3,124 +3,180 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>체험 프로그램 목록</title>
+    <title>체험공고 목록</title>
     <link rel="stylesheet" th:href="@{/css/experience/list.css}" href="/css/experience/list.css" />
+    <style>
+        .experience-list-page { max-width: 1120px; margin: 0 auto; padding: 24px 16px 48px; }
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .list-title { font-size: 28px; font-weight: 700; margin: 0; }
+        .list-title a { color: inherit; text-decoration: none; }
+        .filter-panel { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; background: #fff; }
+        .filter-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 10px; }
+        .filter-row label { display: block; font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+        .filter-row select,
+        .filter-row input { width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 9px 10px; }
+        .filter-actions { display: flex; gap: 8px; justify-content: flex-end; }
+        .filter-actions button { border: 1px solid #d1d5db; background: #fff; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+        .filter-actions button.primary { border-color: #111827; background: #111827; color: #fff; }
+        .list-summary { margin: 14px 2px; font-size: 14px; color: #374151; }
+        .program-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+        .program-card { border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; overflow: hidden; }
+        .program-link { display: block; color: inherit; text-decoration: none; }
+        .program-thumb { height: 170px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; }
+        .program-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .thumb-placeholder { color: #9ca3af; font-size: 13px; }
+        .program-body { padding: 12px 14px; }
+        .program-status { display: inline-block; font-size: 12px; border-radius: 999px; padding: 3px 8px; margin-bottom: 8px; }
+        .program-status.recruiting { background: #dcfce7; color: #166534; }
+        .program-status.draft { background: #dbeafe; color: #1e3a8a; }
+        .program-status.closed { background: #fee2e2; color: #991b1b; }
+        .program-status.cancelled { background: #f3f4f6; color: #4b5563; }
+        .program-title { margin: 0 0 8px; font-size: 17px; line-height: 1.35; }
+        .program-meta { margin: 0; padding: 0; list-style: none; font-size: 13px; color: #4b5563; }
+        .program-meta li { margin-bottom: 4px; }
+        .empty-box { border: 1px dashed #d1d5db; border-radius: 12px; padding: 48px 16px; text-align: center; color: #6b7280; background: #fff; }
+        .pagination { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: 22px; }
+        .pagination a,
+        .pagination span { min-width: 34px; height: 34px; padding: 0 10px; border: 1px solid #d1d5db; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; font-size: 14px; }
+        .pagination a { color: #111827; background: #fff; }
+        .pagination span.current { color: #fff; background: #111827; border-color: #111827; font-weight: 600; }
+        .pagination a.disabled { color: #9ca3af; pointer-events: none; background: #f9fafb; }
+        @media (max-width: 900px) {
+            .filter-row { grid-template-columns: 1fr 1fr; }
+            .program-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 <main class="experience-list-page">
     <header class="list-header">
-        <h1><a th:href="@{/main/main}" href="/main/main">TRY-CATCH 체험 프로그램</a></h1>
+        <h1 class="list-title"><a th:href="@{/main/main}" href="/main/main">체험공고</a></h1>
     </header>
 
-    <section class="list-filters">
+    <section class="filter-panel">
         <form id="filterForm" th:action="@{/experience/list}" method="get">
-            <input type="hidden" name="page" id="pageInput" value="1" />
+            <input type="hidden" id="pageInput" name="page"
+                   th:value="${programWithPaging != null and programWithPaging.criteria != null ? programWithPaging.criteria.page : 1}" value="1" />
 
-            <label for="statusSelect">상태</label>
-            <select id="statusSelect" name="status">
-                <option value="all" th:selected="${status == 'all'}">전체</option>
-                <option value="recruiting" th:selected="${status == 'recruiting'}">모집중</option>
-                <option value="draft" th:selected="${status == 'draft'}">진행중</option>
-                <option value="closed" th:selected="${status == 'closed'}">모집마감</option>
-                <option value="cancelled" th:selected="${status == 'cancelled'}">종료</option>
-            </select>
+            <div class="filter-row">
+                <div>
+                    <label for="statusSelect">상태</label>
+                    <select id="statusSelect" name="status">
+                        <option value="all" th:selected="${status == 'all'}">전체</option>
+                        <option value="recruiting" th:selected="${status == 'recruiting'}">모집중</option>
+                        <option value="draft" th:selected="${status == 'draft'}">진행중</option>
+                        <option value="closed" th:selected="${status == 'closed'}">모집마감</option>
+                        <option value="cancelled" th:selected="${status == 'cancelled'}">종료</option>
+                    </select>
+                </div>
 
-            <label for="jobSelect">직무</label>
-            <select id="jobSelect" name="job">
-                <option value="" th:selected="${job == null or job == ''}">전체 직무</option>
-                <option th:each="j : ${jobs}" th:value="${j}" th:text="${j}" th:selected="${j == job}">직무</option>
-            </select>
+                <div>
+                    <label for="jobSelect">직무</label>
+                    <select id="jobSelect" name="job">
+                        <option value="" th:selected="${job == null or job == ''}">전체 직무</option>
+                        <option th:each="jobOption : ${jobs}"
+                                th:value="${jobOption}"
+                                th:text="${jobOption}"
+                                th:selected="${jobOption == job}">직무</option>
+                    </select>
+                </div>
 
-            <label for="sortSelect">정렬</label>
-            <select id="sortSelect" name="sort">
-                <option value="latest" th:selected="${sort == 'latest'}">최신순</option>
-                <option value="views" th:selected="${sort == 'views'}">조회순</option>
-                <option value="deadline" th:selected="${sort == 'deadline'}">마감임박순</option>
-            </select>
+                <div>
+                    <label for="sortSelect">정렬</label>
+                    <select id="sortSelect" name="sort">
+                        <option value="latest" th:selected="${sort == 'latest'}">최신순</option>
+                        <option value="views" th:selected="${sort == 'views'}">조회순</option>
+                        <option value="deadline" th:selected="${sort == 'deadline'}">마감임박순</option>
+                    </select>
+                </div>
 
-            <label for="keywordInput">검색</label>
-            <input
-                type="text"
-                id="keywordInput"
-                name="keyword"
-                th:value="${keyword}"
-                value=""
-                placeholder="제목/회사명 검색"
-            />
+                <div>
+                    <label for="keywordInput">검색어</label>
+                    <input id="keywordInput" name="keyword" type="text"
+                           th:value="${keyword}" value=""
+                           placeholder="공고명 또는 회사명" />
+                </div>
+            </div>
 
-            <button type="submit">검색</button>
-            <a class="btn-reset" th:href="@{/experience/list}" href="/experience/list">초기화</a>
+            <div class="filter-actions">
+                <button type="button" id="resetFilterButton">초기화</button>
+                <button type="button" id="searchButton" class="primary">검색</button>
+            </div>
         </form>
     </section>
 
-    <section class="list-summary">
-        <p>
-            총 <strong th:text="${programWithPaging.total}">0</strong>건
-        </p>
-    </section>
+    <p class="list-summary" th:if="${programWithPaging != null}">
+        총 <strong th:text="${programWithPaging.total}">0</strong>건
+    </p>
 
-    <section class="program-list">
-        <ul th:if="${programWithPaging.programs != null and !programWithPaging.programs.isEmpty()}">
-            <li th:each="program : ${programWithPaging.programs}" class="program-card">
+    <section th:if="${programWithPaging != null and programWithPaging.programs != null and !#lists.isEmpty(programWithPaging.programs)}">
+        <div class="program-grid">
+            <article class="program-card" th:each="program : ${programWithPaging.programs}">
                 <a class="program-link" th:href="@{/experience/program/{id}(id=${program.id})}" href="#">
-                    <div class="thumb-wrap" th:if="${program.experienceProgramFiles != null and !program.experienceProgramFiles.isEmpty()}">
-                        <img
-                            th:src="@{/api/files/display(filePath=${program.experienceProgramFiles[0].filePath},fileName=${program.experienceProgramFiles[0].fileName})}"
-                            src=""
-                            th:alt="${program.experienceProgramTitle}"
-                            alt="thumbnail"
-                        />
-                    </div>
-                    <div class="thumb-wrap no-image" th:unless="${program.experienceProgramFiles != null and !program.experienceProgramFiles.isEmpty()}">
-                        이미지 없음
+                    <div class="program-thumb">
+                        <img th:if="${program.experienceProgramFiles != null and !#lists.isEmpty(program.experienceProgramFiles)}"
+                             th:src="@{/api/files/display(filePath=${program.experienceProgramFiles[0].filePath},fileName=${program.experienceProgramFiles[0].fileName})}"
+                             alt="공고 이미지" />
+                        <div th:unless="${program.experienceProgramFiles != null and !#lists.isEmpty(program.experienceProgramFiles)}"
+                             class="thumb-placeholder">NO IMAGE</div>
                     </div>
 
                     <div class="program-body">
-                        <p class="company" th:text="${program.corpCompanyName}">회사명</p>
-                        <h2 th:text="${program.experienceProgramTitle}">프로그램 제목</h2>
-                        <p class="desc" th:text="${program.descriptionText}">설명</p>
-                        <div class="meta">
-                            <span th:text="${program.experienceProgramJob}">직무</span>
-                            <span>조회수 <strong th:text="${program.experienceProgramViewCount}">0</strong></span>
-                            <span>마감 <strong th:text="${program.experienceProgramDeadline}">-</strong></span>
-                            <span class="status" th:switch="${program.experienceProgramStatus != null ? program.experienceProgramStatus.name() : 'NONE'}">
-                                <em th:case="'RECRUITING'">모집중</em>
-                                <em th:case="'DRAFT'">진행중</em>
-                                <em th:case="'CLOSED'">모집마감</em>
-                                <em th:case="'CANCELLED'">종료</em>
-                                <em th:case="*">미정</em>
-                            </span>
-                        </div>
+                        <span th:switch="${program.experienceProgramStatus != null ? program.experienceProgramStatus.name() : 'NONE'}">
+                            <span th:case="'RECRUITING'" class="program-status recruiting">모집중</span>
+                            <span th:case="'DRAFT'" class="program-status draft">진행중</span>
+                            <span th:case="'CLOSED'" class="program-status closed">모집마감</span>
+                            <span th:case="'CANCELLED'" class="program-status cancelled">종료</span>
+                            <span th:case="*" class="program-status cancelled">상태미정</span>
+                        </span>
+
+                        <h2 class="program-title" th:text="${program.experienceProgramTitle}">체험 공고 제목</h2>
+
+                        <ul class="program-meta">
+                            <li><strong>회사:</strong> <span th:text="${program.corpCompanyName}">회사명</span></li>
+                            <li><strong>직무:</strong> <span th:text="${program.experienceProgramJob}">직무</span></li>
+                            <li><strong>마감일:</strong> <span th:text="${program.experienceProgramDeadline}">2026-03-31</span></li>
+                            <li><strong>조회수:</strong> <span th:text="${program.experienceProgramViewCount}">0</span></li>
+                        </ul>
                     </div>
                 </a>
-            </li>
-        </ul>
-
-        <div class="empty" th:if="${programWithPaging.programs == null or programWithPaging.programs.isEmpty()}">
-            조건에 맞는 체험 프로그램이 없습니다.
+            </article>
         </div>
     </section>
 
-    <nav class="pagination" th:if="${programWithPaging.total > 0}">
-        <a
-            th:if="${programWithPaging.criteria.startPage > 1}"
-            th:href="@{/experience/list(page=${programWithPaging.criteria.startPage - 1},status=${status},keyword=${keyword},job=${job},sort=${sort})}"
-            href="#"
-        >이전</a>
+    <section th:if="${programWithPaging == null or programWithPaging.programs == null or #lists.isEmpty(programWithPaging.programs)}">
+        <div class="empty-box">조건에 맞는 공고가 없습니다.</div>
+    </section>
 
-        <a
-            th:each="p : ${#numbers.sequence(programWithPaging.criteria.startPage, programWithPaging.criteria.endPage)}"
-            th:href="@{/experience/list(page=${p},status=${status},keyword=${keyword},job=${job},sort=${sort})}"
-            th:text="${p}"
-            th:classappend="${p == programWithPaging.criteria.page} ? 'active'"
-            href="#"
-        >1</a>
+    <nav class="pagination" th:if="${programWithPaging != null and programWithPaging.total > 0}">
+        <a class="js-page-link"
+           th:classappend="${programWithPaging.criteria.page == 1} ? 'disabled'"
+           th:attr="data-page=1"
+           th:href="@{/experience/list(page=1,status=${status},keyword=${keyword},job=${job},sort=${sort})}">처음</a>
 
-        <a
-            th:if="${programWithPaging.criteria.endPage < programWithPaging.criteria.realEnd}"
-            th:href="@{/experience/list(page=${programWithPaging.criteria.endPage + 1},status=${status},keyword=${keyword},job=${job},sort=${sort})}"
-            href="#"
-        >다음</a>
+        <a class="js-page-link"
+           th:classappend="${programWithPaging.criteria.page == 1} ? 'disabled'"
+           th:attr="data-page=${programWithPaging.criteria.page - 1}"
+           th:href="@{/experience/list(page=${programWithPaging.criteria.page - 1},status=${status},keyword=${keyword},job=${job},sort=${sort})}">이전</a>
+
+        <th:block th:each="pageNum : ${#numbers.sequence(programWithPaging.criteria.startPage, programWithPaging.criteria.endPage)}">
+            <span th:if="${pageNum == programWithPaging.criteria.page}" class="current" th:text="${pageNum}">1</span>
+            <a th:unless="${pageNum == programWithPaging.criteria.page}"
+               class="js-page-link"
+               th:attr="data-page=${pageNum}"
+               th:href="@{/experience/list(page=${pageNum},status=${status},keyword=${keyword},job=${job},sort=${sort})}"
+               th:text="${pageNum}">1</a>
+        </th:block>
+
+        <a class="js-page-link"
+           th:classappend="${programWithPaging.criteria.page == programWithPaging.criteria.realEnd} ? 'disabled'"
+           th:attr="data-page=${programWithPaging.criteria.page + 1}"
+           th:href="@{/experience/list(page=${programWithPaging.criteria.page + 1},status=${status},keyword=${keyword},job=${job},sort=${sort})}">다음</a>
+
+        <a class="js-page-link"
+           th:classappend="${programWithPaging.criteria.page == programWithPaging.criteria.realEnd} ? 'disabled'"
+           th:attr="data-page=${programWithPaging.criteria.realEnd}"
+           th:href="@{/experience/list(page=${programWithPaging.criteria.realEnd},status=${status},keyword=${keyword},job=${job},sort=${sort})}">마지막</a>
     </nav>
 </main>
 

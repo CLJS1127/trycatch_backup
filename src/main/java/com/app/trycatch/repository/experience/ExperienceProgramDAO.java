@@ -58,13 +58,14 @@ public class ExperienceProgramDAO {
     }
 
 //    기업 프로그램 관리: 전체 개수 (필터)
-    public int countByCorpId(Long corpId, String status, String keyword) {
-        return experienceProgramMapper.countByCorpId(corpId, status, keyword);
+    public int countByCorpId(Long corpId, String status, String keyword, Long selectedProgramId) {
+        return experienceProgramMapper.countByCorpId(corpId, status, keyword, selectedProgramId);
     }
 
 //    기업 프로그램 관리: 목록 (페이징 + 필터)
-    public List<ExperienceProgramDTO> findByCorpId(Long corpId, Criteria criteria, String status, String keyword, String sort) {
-        return experienceProgramMapper.selectByCorpId(corpId, criteria, status, keyword, sort);
+    public List<ExperienceProgramDTO> findByCorpId(Long corpId, Criteria criteria, String status, String keyword, String sort,
+                                                    Long selectedProgramId) {
+        return experienceProgramMapper.selectByCorpId(corpId, criteria, status, keyword, sort, selectedProgramId);
     }
 
 //    체험 프로그램 목록(공개): 개수 (필터)

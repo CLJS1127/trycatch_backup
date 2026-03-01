@@ -118,12 +118,23 @@ public class MemberController {
     public String goMainPage(Model model) {
         List<ExperienceProgramRankDTO> popularPrograms = mainHomeService.getPopularPrograms(6);
         List<ExperienceProgramRankDTO> latestPrograms = mainHomeService.getLatestPrograms(6);
+        List<ExperienceProgramRankDTO> companyLatestPrograms = mainHomeService.getNewestPrograms(10);
+        List<ExperienceProgramRankDTO> deadlineSoonPrograms = mainHomeService.getDeadlineSoonPrograms(4);
+        List<ExperienceProgramRankDTO> highRecruitmentPrograms = mainHomeService.getHighRecruitmentPrograms(8);
+        List<ExperienceProgramRankDTO> lowApplyRatePrograms = mainHomeService.getLowApplyRatePrograms(5);
+        List<ExperienceProgramRankDTO> newestPrograms = mainHomeService.getNewestPrograms(10);
         List<QnaDTO> latestQnas = mainHomeService.getLatestQnas(6);
         List<SkillLogDTO> latestSkillLogs = mainHomeService.getLatestSkillLogs(6);
+        List<ExperienceProgramRankDTO> personalizedPrograms = List.of();
 
         model.addAttribute("featuredPrograms", popularPrograms);
         model.addAttribute("popularPrograms", popularPrograms);
         model.addAttribute("latestPrograms", latestPrograms);
+        model.addAttribute("companyLatestPrograms", companyLatestPrograms);
+        model.addAttribute("deadlineSoonPrograms", deadlineSoonPrograms);
+        model.addAttribute("highRecruitmentPrograms", highRecruitmentPrograms);
+        model.addAttribute("lowApplyRatePrograms", lowApplyRatePrograms);
+        model.addAttribute("newestPrograms", newestPrograms);
         model.addAttribute("latestQnas", latestQnas);
         model.addAttribute("latestSkillLogs", latestSkillLogs);
         model.addAttribute("loginMember", session.getAttribute("member"));
@@ -132,7 +143,9 @@ public class MemberController {
         if (member instanceof IndividualMemberDTO individualMember) {
             Set<Long> scrapProgramIds = mainHomeService.getActiveScrapProgramIds(individualMember);
             model.addAttribute("scrapProgramIds", scrapProgramIds);
+            personalizedPrograms = mainHomeService.getRecentViewedPrograms(individualMember.getId(), 4);
         }
+        model.addAttribute("personalizedPrograms", personalizedPrograms);
 
         return "main/main";
     }

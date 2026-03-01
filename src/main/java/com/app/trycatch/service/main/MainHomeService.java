@@ -44,6 +44,39 @@ public class MainHomeService {
         return programs;
     }
 
+    public List<ExperienceProgramRankDTO> getDeadlineSoonPrograms(int limit) {
+        List<ExperienceProgramRankDTO> programs = experienceProgramRankDAO.findTopByDeadlineSoon(limit);
+        attachProgramFiles(programs);
+        return programs;
+    }
+
+    public List<ExperienceProgramRankDTO> getHighRecruitmentPrograms(int limit) {
+        List<ExperienceProgramRankDTO> programs = experienceProgramRankDAO.findTopByRecruitmentCount(limit);
+        attachProgramFiles(programs);
+        return programs;
+    }
+
+    public List<ExperienceProgramRankDTO> getLowApplyRatePrograms(int limit) {
+        List<ExperienceProgramRankDTO> programs = experienceProgramRankDAO.findTopByApplyRateAsc(limit);
+        attachProgramFiles(programs);
+        return programs;
+    }
+
+    public List<ExperienceProgramRankDTO> getNewestPrograms(int limit) {
+        List<ExperienceProgramRankDTO> programs = experienceProgramRankDAO.findTopByCreatedDatetime(limit);
+        attachProgramFiles(programs);
+        return programs;
+    }
+
+    public List<ExperienceProgramRankDTO> getRecentViewedPrograms(Long memberId, int limit) {
+        if (memberId == null) {
+            return List.of();
+        }
+        List<ExperienceProgramRankDTO> programs = experienceProgramRankDAO.findRecentViewedByMemberId(memberId, limit);
+        attachProgramFiles(programs);
+        return programs;
+    }
+
     private void attachProgramFiles(List<ExperienceProgramRankDTO> programs) {
         programs.forEach(program -> {
             List<ExperienceProgramFileDTO> files =

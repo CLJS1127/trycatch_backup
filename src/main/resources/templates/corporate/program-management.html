@@ -28,6 +28,8 @@
                     <input id="TopCountInput" name="TopCount" type="hidden" th:value="${currentTopCount}">
                     <!-- 정렬 -->
                     <input id="sortInput" name="sort" type="hidden" th:value="${currentSort}">
+                    <!-- 등록 직후 선택 공고 -->
+                    <input id="selectedProgramIdInput" name="selectedProgramId" type="hidden" th:value="${selectedProgramId}">
                     <!-- 페이지 -->
                     <input id="pageInput" name="page" type="hidden" value="1">
 
@@ -36,6 +38,7 @@
                         <!-- header -->
                         <div class="topArea">
                             <h2 class="subTits">전체 채험공고</h2>
+                            <p class="subInfo">총 <strong th:text="${programWithPaging.criteria.total}">0</strong>건</p>
                         </div>
 
                         <!-- 메뉴(탭) -->

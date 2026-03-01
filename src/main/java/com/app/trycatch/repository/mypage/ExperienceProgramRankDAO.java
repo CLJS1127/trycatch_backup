@@ -27,4 +27,24 @@ public class ExperienceProgramRankDAO {
     public List<ExperienceProgramRankDTO> findTopByUpdatedDatetime(int limit) {
         return experienceProgramRankMapper.selectTopByUpdatedDatetime(limit);
     }
+
+    public List<ExperienceProgramRankDTO> findTopByDeadlineSoon(int limit) {
+        return experienceProgramRankMapper.selectTopByDeadlineSoon(limit);
+    }
+
+    public List<ExperienceProgramRankDTO> findTopByRecruitmentCount(int limit) {
+        return experienceProgramRankMapper.selectTopByRecruitmentCount(limit);
+    }
+
+    public List<ExperienceProgramRankDTO> findTopByApplyRateAsc(int limit) {
+        return experienceProgramRankMapper.selectTopByApplyRateAsc(limit);
+    }
+
+    public List<ExperienceProgramRankDTO> findTopByCreatedDatetime(int limit) {
+        return experienceProgramRankMapper.selectTopByCreatedDatetime(limit);
+    }
+
+    public List<ExperienceProgramRankDTO> findRecentViewedByMemberId(Long memberId, int limit) {
+        return experienceProgramRankMapper.selectRecentViewedByMemberId(memberId, limit);
+    }
 }

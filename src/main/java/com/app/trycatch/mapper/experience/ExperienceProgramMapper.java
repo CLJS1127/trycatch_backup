@@ -38,12 +38,13 @@ public interface ExperienceProgramMapper {
     List<ExperienceProgramDTO> selectLatestByCorpId(@Param("corpId") Long corpId, @Param("limit") int limit);
 
 //    기업 프로그램 관리: 전체 개수 (필터)
-    int countByCorpId(@Param("corpId") Long corpId, @Param("status") String status, @Param("keyword") String keyword);
+    int countByCorpId(@Param("corpId") Long corpId, @Param("status") String status,
+                      @Param("keyword") String keyword, @Param("selectedProgramId") Long selectedProgramId);
 
 //    기업 프로그램 관리: 목록 (페이징 + 필터)
     List<ExperienceProgramDTO> selectByCorpId(@Param("corpId") Long corpId, @Param("criteria") Criteria criteria,
                                               @Param("status") String status, @Param("keyword") String keyword,
-                                              @Param("sort") String sort);
+                                              @Param("sort") String sort, @Param("selectedProgramId") Long selectedProgramId);
 
 //    체험 프로그램 목록(공개): 전체 개수 (필터)
     int countPublic(@Param("status") String status, @Param("keyword") String keyword, @Param("job") String job);

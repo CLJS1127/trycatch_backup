@@ -273,7 +273,7 @@ public class CorporateService {
     // ── 프로그램 등록 ──────────────────────────────────────────────────
 
     /** 새 프로그램 등록 */
-    public void createProgram(ExperienceProgramDTO dto, List<MultipartFile> files, AddressDTO addressDTO) {
+    public Long createProgram(ExperienceProgramDTO dto, List<MultipartFile> files, AddressDTO addressDTO) {
         experienceProgramDAO.save(dto);
         Long programId = dto.getId();
 
@@ -327,6 +327,8 @@ public class CorporateService {
                 }
             }
         }
+
+        return programId;
     }
 
     // ── 프로그램 수정 ──────────────────────────────────────────────────
@@ -420,14 +422,15 @@ public class CorporateService {
 
     /** 프로그램 목록 (페이징 + 상태 필터 + 키워드 검색) */
     public CorpProgramWithPagingDTO getPrograms(Long corpId, int page, int rowCount,
-                                                       String status, String keyword, String sort) {
-        int total = experienceProgramDAO.countByCorpId(corpId, status, keyword);
+                                                       String status, String keyword, String sort,
+                                                       Long selectedProgramId) {
+        int total = experienceProgramDAO.countByCorpId(corpId, status, keyword, selectedProgramId);
 
         Criteria criteria = new Criteria(page, total);
         recalcCriteria(criteria, rowCount);
 
         List<ExperienceProgramDTO> list =
-                experienceProgramDAO.findByCorpId(corpId, criteria, status, keyword, sort);
+                experienceProgramDAO.findByCorpId(corpId, criteria, status, keyword, sort, selectedProgramId);
         boolean hasMore = list.size() > rowCount;
         if (hasMore) list = list.subList(0, rowCount);
 

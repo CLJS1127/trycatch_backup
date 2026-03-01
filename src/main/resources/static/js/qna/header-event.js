@@ -243,3 +243,25 @@ if (closeBtn2) {
         if (searchBox) searchBox.classList.remove("searchOpen");
     });
 }
+
+// 체험 정보/체험 공고 이동 경로 고정
+(() => {
+    const experienceListUrl = "/experience/list";
+    const linkCandidates = new Set();
+
+    const topExperience = document.querySelector("#onepick > a.linkItem");
+    if (topExperience) {
+        linkCandidates.add(topExperience);
+    }
+
+    document.querySelectorAll("a").forEach((anchor) => {
+        const text = (anchor.textContent || "").trim();
+        if (text === "체험 정보" || text === "체험 공고") {
+            linkCandidates.add(anchor);
+        }
+    });
+
+    linkCandidates.forEach((anchor) => {
+        anchor.setAttribute("href", experienceListUrl);
+    });
+})();
