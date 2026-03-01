@@ -780,3 +780,52 @@ $env:GRADLE_USER_HOME='C:\\Users\\pigch\\Desktop\\trycatch_copy\\.gradle-user-ho
 ### 4) 효과
 - `experience/list` -> `experience/training-program/{id}` 흐름이 실제 데이터 기반으로 안정 연결됨
 - 메인페이지 체험 카드의 상세 이동/썸네일 표시가 현재 백엔드 라우트/파일 API와 정합됨
+
+---
+
+## 추가 요청 반영 (2026-03-01) - 원본 HTML 유지 + 3-tier 적용 재정렬
+
+### 1) 요청 사항
+- `summary.md` 확인 후 다시 정리
+- 체험 프로그램/메인 페이지 모두 **기존 사용자가 만든 HTML을 유지**하고
+  Thymeleaf 바인딩 외 구조 변경 금지
+- 체험 프로그램 목록에서 상세 이동 시 발생하던 오류 구간 점검
+- 메인도 `main/main.html` 원본을 유지한 채 3-tier 로직만 적용
+
+### 2) 적용한 코드 변경
+1. 체험 상세 라우트 기준 재정렬
+   - `src/main/java/com/app/trycatch/controller/experience/ExperienceProgramController.java`
+   - 상세 기본 라우트: `GET /experience/program/{id}`
+   - 호환 라우트 유지:
+     - `GET /experience/training-program/{id}` -> `/experience/program/{id}` 리다이렉트
+     - `GET /experience/detail?id=` -> `/experience/program/{id}` 리다이렉트
+2. 목록 링크/로그인 복귀 경로 정합화
+   - `src/main/resources/templates/experience/list.html`
+     - 카드 상세 링크를 `/experience/program/{id}`로 통일
+     - 직무 필터를 기존 텍스트 입력 방식으로 복원
+   - `src/main/resources/templates/experience/training-program.html`
+     - 로그인 복귀 URL `re_url`을 `/experience/program/{id}`로 통일
+3. 메인 3-tier 적용
+   - `src/main/java/com/app/trycatch/service/main/MainHomeService.java` 신규 생성
+     - 메인/서비스소개 데이터 조합 로직(인기 프로그램, 최신 QnA, 최신 기술블로그, 스크랩 ID) 분리
+   - `src/main/java/com/app/trycatch/controller/member/MemberController.java`
+     - DAO 직접 조회 로직 제거, `MainHomeService` 호출 구조로 변경
+4. 메인 HTML 원복
+   - `src/main/resources/templates/main/main.html`
+   - 사용자가 작성한 기존 원본 구조로 복원하고, 기존 fragment 연결 유지
+
+### 3) 검증 결과
+1. 컴파일 검증
+```powershell
+$env:GRADLE_USER_HOME='C:\\Users\\pigch\\Desktop\\trycatch_copy\\.gradle-user-home'; .\\gradlew.bat compileJava
+```
+- 결과: `BUILD SUCCESSFUL`
+2. 런타임 검증
+- `GET /main/main` -> `200`
+- `GET /experience/list` -> `200`
+- `GET /experience/program/1` -> `302`
+- `GET /experience/training-program/1` -> `302` (호환 리다이렉트 동작)
+
+### 4) 비고
+- 상세 페이지 응답 코드 `302`는 현재 테스트 DB에서 해당 ID 실데이터 미존재 시
+  예외 핸들러/리다이렉트가 정상 동작한 결과이며, 라우트 깨짐으로 인한 서버 오류는 재현되지 않음

@@ -88,7 +88,7 @@
 
                 <a class="apply-button login"
                    th:if="${loginMember == null}"
-                   th:href="@{/main/log-in(re_url=${'/experience/training-program/' + program.id})}">로그인 후 지원</a>
+                   th:href="@{/main/log-in(re_url=${'/experience/program/' + program.id})}">로그인 후 지원</a>
 
                 <button class="apply-button disabled"
                         th:if="${loginMember != null and !canApply}"

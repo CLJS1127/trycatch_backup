@@ -1,21 +1,14 @@
 package com.app.trycatch.controller.member;
 
-import com.app.trycatch.dto.experience.ExperienceProgramFileDTO;
 import com.app.trycatch.dto.member.CorpMemberDTO;
 import com.app.trycatch.dto.member.IndividualMemberDTO;
 import com.app.trycatch.dto.member.MemberDTO;
 import com.app.trycatch.dto.mypage.ExperienceProgramRankDTO;
 import com.app.trycatch.dto.qna.QnaDTO;
-import com.app.trycatch.dto.mypage.ScrapPostingDTO;
 import com.app.trycatch.dto.skilllog.SkillLogDTO;
-import com.app.trycatch.common.enumeration.member.Status;
-import com.app.trycatch.repository.experience.ExperienceProgramFileDAO;
-import com.app.trycatch.repository.mypage.ExperienceProgramRankDAO;
-import com.app.trycatch.repository.mypage.ScrapPostingDAO;
-import com.app.trycatch.repository.qna.QnaDAO;
-import com.app.trycatch.repository.skilllog.SkillLogDAO;
 import com.app.trycatch.service.member.CorpService;
 import com.app.trycatch.service.member.IndividualMemberService;
+import com.app.trycatch.service.main.MainHomeService;
 import com.app.trycatch.service.oauth.KakaoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +27,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/main")
@@ -44,11 +36,7 @@ public class MemberController {
     private final IndividualMemberService individualMemberService;
     private final CorpService corpService;
     private final KakaoService kakaoService;
-    private final ExperienceProgramRankDAO experienceProgramRankDAO;
-    private final ExperienceProgramFileDAO experienceProgramFileDAO;
-    private final ScrapPostingDAO scrapPostingDAO;
-    private final QnaDAO qnaDAO;
-    private final SkillLogDAO skillLogDAO;
+    private final MainHomeService mainHomeService;
     private final HttpSession session;
 
     @GetMapping("individual-join")
@@ -113,22 +101,13 @@ public class MemberController {
 
     @GetMapping("service-introduce")
     public String goServiceIntroduce(Model model){
-        List<ExperienceProgramRankDTO> programs = experienceProgramRankDAO.findTopByViewCount(10);
-
-        programs.forEach(program -> {
-            List<ExperienceProgramFileDTO> files = experienceProgramFileDAO.findAllByExperienceProgramId(program.getExperienceProgramId());
-            program.setExperienceProgramFiles(files);
-        });
+        List<ExperienceProgramRankDTO> programs = mainHomeService.getTopPrograms(10);
 
         model.addAttribute("programs", programs);
 
         Object member = session.getAttribute("member");
         if (member instanceof IndividualMemberDTO individualMember) {
-            List<ScrapPostingDTO> scraps = scrapPostingDAO.findAllByMemberId(individualMember.getId());
-            Set<Long> scrapProgramIds = scraps.stream()
-                    .filter(s -> s.getScrapStatus() == com.app.trycatch.common.enumeration.member.Status.ACTIVE)
-                    .map(ScrapPostingDTO::getExperienceProgramId)
-                    .collect(Collectors.toSet());
+            Set<Long> scrapProgramIds = mainHomeService.getActiveScrapProgramIds(individualMember);
             model.addAttribute("scrapProgramIds", scrapProgramIds);
         }
 
@@ -137,14 +116,9 @@ public class MemberController {
 
     @GetMapping("main")
     public String goMainPage(Model model) {
-        List<ExperienceProgramRankDTO> featuredPrograms = experienceProgramRankDAO.findTopByViewCount(6);
-        featuredPrograms.forEach(program -> {
-            List<ExperienceProgramFileDTO> files = experienceProgramFileDAO.findAllByExperienceProgramId(program.getExperienceProgramId());
-            program.setExperienceProgramFiles(files);
-        });
-
-        List<QnaDTO> latestQnas = qnaDAO.findLatest(6);
-        List<SkillLogDTO> latestSkillLogs = skillLogDAO.findLatest(6);
+        List<ExperienceProgramRankDTO> featuredPrograms = mainHomeService.getTopPrograms(6);
+        List<QnaDTO> latestQnas = mainHomeService.getLatestQnas(6);
+        List<SkillLogDTO> latestSkillLogs = mainHomeService.getLatestSkillLogs(6);
 
         model.addAttribute("featuredPrograms", featuredPrograms);
         model.addAttribute("latestQnas", latestQnas);
@@ -153,11 +127,7 @@ public class MemberController {
 
         Object member = session.getAttribute("member");
         if (member instanceof IndividualMemberDTO individualMember) {
-            List<ScrapPostingDTO> scraps = scrapPostingDAO.findAllByMemberId(individualMember.getId());
-            Set<Long> scrapProgramIds = scraps.stream()
-                    .filter(s -> s.getScrapStatus() == Status.ACTIVE)
-                    .map(ScrapPostingDTO::getExperienceProgramId)
-                    .collect(Collectors.toSet());
+            Set<Long> scrapProgramIds = mainHomeService.getActiveScrapProgramIds(individualMember);
             model.addAttribute("scrapProgramIds", scrapProgramIds);
         }
 

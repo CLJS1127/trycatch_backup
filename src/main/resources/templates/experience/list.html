@@ -48,13 +48,7 @@
 
             <label>
                 직무
-                <select name="job">
-                    <option value="" th:selected="${job == ''}">전체</option>
-                    <option th:each="jobOption : ${jobs}"
-                            th:value="${jobOption}"
-                            th:text="${jobOption}"
-                            th:selected="${jobOption == job}">직무</option>
-                </select>
+                <input type="text" name="job" placeholder="예: 개발, 디자인" th:value="${job}">
             </label>
 
             <label class="keyword-label">
@@ -70,7 +64,7 @@
         <ul class="program-grid">
             <li class="program-card" th:each="program : ${programWithPaging.programs}">
                 <th:block th:with="thumb=${#lists.isEmpty(program.experienceProgramFiles) ? null : program.experienceProgramFiles.get(0)}">
-                    <a class="thumbnail" th:href="@{/experience/training-program/{id}(id=${program.id})}">
+                    <a class="thumbnail" th:href="@{/experience/program/{id}(id=${program.id})}">
                         <img th:if="${thumb != null}"
                              th:src="@{/api/files/display(filePath=${thumb.filePath}, fileName=${thumb.fileName})}"
                              alt="프로그램 대표 이미지">
@@ -91,7 +85,7 @@
                     </div>
 
                     <h2>
-                        <a th:href="@{/experience/training-program/{id}(id=${program.id})}"
+                        <a th:href="@{/experience/program/{id}(id=${program.id})}"
                            th:text="${program.experienceProgramTitle}">프로그램 제목</a>
                     </h2>
 

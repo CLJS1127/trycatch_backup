@@ -35,7 +35,7 @@ public class ExperienceProgramController {
         return "experience/list";
     }
 
-    @GetMapping("/training-program/{id}")
+    @GetMapping("/program/{id}")
     public String detail(@PathVariable Long id, Model model) {
         Object loginMember = session.getAttribute("member");
         boolean canApply = loginMember instanceof IndividualMemberDTO;
@@ -49,13 +49,13 @@ public class ExperienceProgramController {
         return "experience/training-program";
     }
 
-    @GetMapping("/program/{id}")
+    @GetMapping("/training-program/{id}")
     public String detailRedirect(@PathVariable Long id) {
-        return "redirect:/experience/training-program/" + id;
+        return "redirect:/experience/program/" + id;
     }
 
     @GetMapping("/detail")
     public String detailLegacy(@RequestParam Long id) {
-        return "redirect:/experience/training-program/" + id;
+        return "redirect:/experience/program/" + id;
     }
 }
