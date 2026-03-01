@@ -694,3 +694,89 @@ $env:GRADLE_USER_HOME='C:\\Users\\pigch\\Desktop\\trycatch_copy\\.gradle-user-ho
 - 이번 수정은 체험 목록/상세 경로 자체 버그라기보다, 해당 화면 진입 전 앱을 중단시키던
   중복 빈/alias 문제를 해소한 작업
 - 실제 체험 데이터가 있는 계정/프로그램 ID 기준으로 최종 UX 확인을 추가 권장
+
+---
+
+## 추가 요청 반영 (2026-03-01) - 메인 페이지 구현
+
+### 1) 구현 목표
+- `/main/main` 진입 시 더 이상 `qna/list`로 리다이렉트하지 않고 메인 화면을 직접 렌더링
+- 메인 화면에 실제 데이터(인기 체험 공고, 최신 QnA, 최신 기술블로그) 연결
+- 로그인 후 기본 이동 경로를 메인으로 정렬
+
+### 2) 적용한 코드 변경
+1. 메인 라우트 동작 변경
+   - `src/main/java/com/app/trycatch/controller/member/MemberController.java`
+   - `@GetMapping("main")` 반환을 `RedirectView` -> `String("main/main")`로 변경
+2. 메인 데이터 바인딩 추가
+   - `featuredPrograms`: `experienceProgramRankDAO.findTopByViewCount(6)`
+   - `latestQnas`: `qnaDAO.findLatest(6)`
+   - `latestSkillLogs`: `skillLogDAO.findLatest(6)`
+   - 개인회원 세션인 경우 `scrapProgramIds`도 함께 주입
+3. 템플릿 교체
+   - `src/main/resources/templates/main/main.html`
+   - 메인 히어로/인기 체험/최신 QnA/최신 기술블로그/CTA 구조로 재구성
+4. 메인 전용 스타일 추가
+   - `src/main/resources/static/css/main/main-home.css` 신규 생성
+5. 로그인 이후 기본 진입 경로 정렬
+   - `MemberController.login()` 기본 `re_url`을 `/main/main`으로 변경
+   - 카카오 콜백 fallback 경로도 `/main/main`으로 변경
+
+### 3) 검증 결과
+1. 컴파일 검증
+```powershell
+$env:GRADLE_USER_HOME='C:\\Users\\pigch\\Desktop\\trycatch_copy\\.gradle-user-home'; .\\gradlew.bat compileJava
+```
+- 결과: `BUILD SUCCESSFUL`
+2. 런타임 검증
+- `bootRun` 후 `GET /main/main` 호출 결과 `200`
+- 응답 HTML에 메인 핵심 문구(`체험으로 시작하는 취업 준비`) 포함 확인
+
+### 4) 비고
+- 기존 정적/대용량 `main.html`을 실제 서비스 데이터 기반 메인 페이지로 치환
+- 헤더는 기존 `qna/header.html` fragment를 재사용하여 네비게이션 일관성 유지
+
+---
+
+## 추가 요청 반영 (2026-03-01) - 체험 상세 경로 정리 + 메인페이지 마무리
+
+### 1) 요청 사항
+- `summary.md`에 이번 세션 변경사항 기록
+- 체험 목록에서 상세 이동 경로를 `experience/training-program` 기준으로 정리
+- 메인페이지(`main/main`)의 체험 카드 링크/썸네일 경로를 실제 라우트 및 파일 API 기준으로 마감
+
+### 2) 적용한 코드 변경
+1. 체험 상세 라우트 표준화
+   - `src/main/java/com/app/trycatch/controller/experience/ExperienceProgramController.java`
+   - 상세 기본 라우트: `GET /experience/training-program/{id}`
+   - 호환 라우트 유지:
+     - `GET /experience/program/{id}` -> `training-program` 리다이렉트
+     - `GET /experience/detail?id=` -> `training-program` 리다이렉트
+2. 목록-상세 연결 및 필터 보강
+   - `src/main/resources/templates/experience/list.html`
+     - 카드 링크를 `/experience/training-program/{id}`로 변경
+     - 직무 필터를 자유입력 -> DB 기반 드롭다운으로 변경
+   - `src/main/java/com/app/trycatch/service/experience/ExperienceProgramService.java`
+   - `src/main/java/com/app/trycatch/repository/experience/ExperienceProgramDAO.java`
+   - `src/main/java/com/app/trycatch/mapper/experience/ExperienceProgramMapper.java`
+   - `src/main/resources/mapper/experience/ExperienceProgramMapper.xml`
+     - `selectDistinctJobs` 추가(직무 필터 옵션 조회)
+3. `training-program` 템플릿 동적 상세화
+   - `src/main/resources/templates/experience/training-program.html`
+   - 기존 정적 덤프형 마크업을 Thymeleaf 데이터 바인딩 상세 템플릿으로 교체
+   - 지원 버튼 분기(`canApply/hasApplied`) 및 상세 설명/첨부 이미지 렌더링 연동
+4. 메인페이지 마감(링크/썸네일 경로 정합화)
+   - `src/main/resources/templates/main/main.html`
+   - 체험 카드 상세 링크: `/experience/training-program/{id}`로 정리
+   - 썸네일 표시 경로: `/file/display` 경로 오사용 제거, `/api/files/display(filePath,fileName)`로 수정
+   - 이미지 타입 체크(`fileContentType == IMAGE`) 조건 적용
+
+### 3) 검증 결과
+```powershell
+$env:GRADLE_USER_HOME='C:\\Users\\pigch\\Desktop\\trycatch_copy\\.gradle-user-home'; .\\gradlew.bat compileJava
+```
+- 결과: `BUILD SUCCESSFUL`
+
+### 4) 효과
+- `experience/list` -> `experience/training-program/{id}` 흐름이 실제 데이터 기반으로 안정 연결됨
+- 메인페이지 체험 카드의 상세 이동/썸네일 표시가 현재 백엔드 라우트/파일 API와 정합됨

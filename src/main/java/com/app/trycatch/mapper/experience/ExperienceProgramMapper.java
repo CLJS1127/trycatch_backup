@@ -53,6 +53,9 @@ public interface ExperienceProgramMapper {
                                             @Param("keyword") String keyword, @Param("job") String job,
                                             @Param("sort") String sort);
 
+//    체험 프로그램 목록(공개): 직무 필터 옵션
+    List<String> selectDistinctJobs();
+
 //    마감일 조회 (스케줄러용)
     List<ExperienceProgramDTO> selectByDeadline(@Param("deadline") String deadline);
 

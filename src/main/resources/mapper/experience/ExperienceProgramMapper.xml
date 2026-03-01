@@ -150,6 +150,14 @@
         limit #{criteria.count} offset #{criteria.offset}
     </select>
 
+    <select id="selectDistinctJobs" resultType="string">
+        select distinct ep.experience_program_job
+        from tbl_experience_program ep
+        where ep.experience_program_job is not null
+          and trim(ep.experience_program_job) != ''
+        order by ep.experience_program_job asc
+    </select>
+
     <!-- 프로그램 등록 -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO tbl_experience_program (

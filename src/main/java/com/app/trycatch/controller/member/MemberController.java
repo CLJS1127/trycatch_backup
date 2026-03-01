@@ -5,10 +5,15 @@ import com.app.trycatch.dto.member.CorpMemberDTO;
 import com.app.trycatch.dto.member.IndividualMemberDTO;
 import com.app.trycatch.dto.member.MemberDTO;
 import com.app.trycatch.dto.mypage.ExperienceProgramRankDTO;
+import com.app.trycatch.dto.qna.QnaDTO;
 import com.app.trycatch.dto.mypage.ScrapPostingDTO;
+import com.app.trycatch.dto.skilllog.SkillLogDTO;
+import com.app.trycatch.common.enumeration.member.Status;
 import com.app.trycatch.repository.experience.ExperienceProgramFileDAO;
 import com.app.trycatch.repository.mypage.ExperienceProgramRankDAO;
 import com.app.trycatch.repository.mypage.ScrapPostingDAO;
+import com.app.trycatch.repository.qna.QnaDAO;
+import com.app.trycatch.repository.skilllog.SkillLogDAO;
 import com.app.trycatch.service.member.CorpService;
 import com.app.trycatch.service.member.IndividualMemberService;
 import com.app.trycatch.service.oauth.KakaoService;
@@ -42,6 +47,8 @@ public class MemberController {
     private final ExperienceProgramRankDAO experienceProgramRankDAO;
     private final ExperienceProgramFileDAO experienceProgramFileDAO;
     private final ScrapPostingDAO scrapPostingDAO;
+    private final QnaDAO qnaDAO;
+    private final SkillLogDAO skillLogDAO;
     private final HttpSession session;
 
     @GetMapping("individual-join")
@@ -80,7 +87,7 @@ public class MemberController {
             session.setAttribute("member", fullMember);
             String reUrl = (String) session.getAttribute("re_url");
             session.removeAttribute("re_url");
-            return "redirect:" + (reUrl != null ? reUrl : "/qna/list");
+            return "redirect:" + (reUrl != null ? reUrl : "/main/main");
         }
 
         model.addAttribute("memberEmail", kakaoInfo.getMemberEmail());
@@ -129,8 +136,32 @@ public class MemberController {
     }
 
     @GetMapping("main")
-    public RedirectView goMainPage() {
-        return new RedirectView("/qna/list");
+    public String goMainPage(Model model) {
+        List<ExperienceProgramRankDTO> featuredPrograms = experienceProgramRankDAO.findTopByViewCount(6);
+        featuredPrograms.forEach(program -> {
+            List<ExperienceProgramFileDTO> files = experienceProgramFileDAO.findAllByExperienceProgramId(program.getExperienceProgramId());
+            program.setExperienceProgramFiles(files);
+        });
+
+        List<QnaDTO> latestQnas = qnaDAO.findLatest(6);
+        List<SkillLogDTO> latestSkillLogs = skillLogDAO.findLatest(6);
+
+        model.addAttribute("featuredPrograms", featuredPrograms);
+        model.addAttribute("latestQnas", latestQnas);
+        model.addAttribute("latestSkillLogs", latestSkillLogs);
+        model.addAttribute("loginMember", session.getAttribute("member"));
+
+        Object member = session.getAttribute("member");
+        if (member instanceof IndividualMemberDTO individualMember) {
+            List<ScrapPostingDTO> scraps = scrapPostingDAO.findAllByMemberId(individualMember.getId());
+            Set<Long> scrapProgramIds = scraps.stream()
+                    .filter(s -> s.getScrapStatus() == Status.ACTIVE)
+                    .map(ScrapPostingDTO::getExperienceProgramId)
+                    .collect(Collectors.toSet());
+            model.addAttribute("scrapProgramIds", scrapProgramIds);
+        }
+
+        return "main/main";
     }
 //  로그인완료
     @GetMapping("log-in")
@@ -155,7 +186,7 @@ public class MemberController {
     }
 
     @PostMapping("log-in")
-    public RedirectView login(MemberDTO memberDTO, @RequestParam(value = "re_url", defaultValue = "/qna/list") String reUrl, HttpServletResponse response) {
+    public RedirectView login(MemberDTO memberDTO, @RequestParam(value = "re_url", defaultValue = "/main/main") String reUrl, HttpServletResponse response) {
         session.setAttribute("member", individualMemberService.login(memberDTO));
 
         Cookie rememberMemberIdCookie = new Cookie("remember-member-id", memberDTO.getMemberId());

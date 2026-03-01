@@ -76,4 +76,9 @@ public class ExperienceProgramDAO {
     public List<ExperienceProgramDTO> findPublic(Criteria criteria, String status, String keyword, String job, String sort) {
         return experienceProgramMapper.selectPublic(criteria, status, keyword, job, sort);
     }
+
+//    체험 프로그램 목록(공개): 직무 필터 옵션
+    public List<String> findDistinctJobs() {
+        return experienceProgramMapper.selectDistinctJobs();
+    }
 }

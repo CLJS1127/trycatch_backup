@@ -56,4 +56,8 @@ public class ExperienceProgramService {
     public boolean hasApplied(Long programId, Long memberId) {
         return applyDAO.existsByProgramIdAndMemberId(programId, memberId);
     }
+
+    public List<String> getDistinctJobs() {
+        return experienceProgramDAO.findDistinctJobs();
+    }
 }
