@@ -984,3 +984,46 @@ $env:GRADLE_USER_HOME='C:\\Users\\pigch\\Desktop\\trycatch_copy\\.gradle-user-ho
 
 ### 4) 비고
 - 기존 `10000` 포트 서버가 구버전 프로세스로 남아 있으면 수정 반영이 지연될 수 있어 재기동 후 확인 필요
+
+---
+
+## 추가 요청 반영 (2026-03-01) - TRY-CATCH 원본 experience 재적용 + 서버 동작 검증
+
+### 1) 요청 사항
+- `C:\Users\pigch\Desktop\gb_0090_kyc\TRY-CATCH`의 `experience` 파일을 현재 프로젝트에 그대로 반영
+- 현재 경로의 기존 `experience` 파일 삭제 후 원본 붙여넣기
+- 3-tier 분류 기준(`xml, mapper, VO, DTO, DAO, Service, Controller, html, css, js`)에 맞춰 누락 계층 폴더 보강
+- 서버 실행 후 실제 URL 동작 검증
+
+### 2) 반영 내용
+1. 원본 `experience` 리소스 재적용
+   - `src/main/resources/templates/experience/list.html`
+   - `src/main/resources/templates/experience/training-program.html`
+   - `src/main/resources/static/css/experience/list.css`
+   - `src/main/resources/static/css/experience/training-program.css`
+   - `src/main/resources/static/js/experience/list.js`
+   - `src/main/resources/static/js/experience/training-program.js`
+2. 원본 기준으로 제거된 파일 반영
+   - 삭제: `templates/experience/detail.html`
+   - 삭제: `static/css/experience/program-detail.css`
+   - 삭제: `static/css/experience/program-list.css`
+   - 삭제: `static/js/experience/program-detail.js`
+3. 3-tier 누락 계층 폴더 생성
+   - `src/main/java/com/app/trycatch/dao/experience/`
+   - `src/main/java/com/app/trycatch/vo/experience/`
+
+### 3) 서버 실행/동작 검증
+- 실행 명령:
+```powershell
+./gradlew.bat bootRun --no-daemon
+```
+- 애플리케이션 기동 확인:
+  - `Tomcat started on port 10000`
+- URL 검증 결과:
+  - `GET /experience/list` -> `200`
+  - `GET /experience/training-program/1` -> `302` (상세로 리다이렉트)
+  - `GET /experience/detail?id=1` -> `302` (상세로 리다이렉트)
+  - `GET /experience/list.html` -> `404`
+  - `GET /experience/training-program.html` -> `404`
+- 결론:
+  - 현재 라우팅은 정적 `.html` 직접 접근이 아니라 컨트롤러 매핑 경로(`/experience/...`) 기준으로 정상 동작

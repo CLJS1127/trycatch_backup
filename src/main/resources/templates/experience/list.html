@@ -1,123 +1,2688 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>체험 프로그램 목록</title>
-    <link rel="stylesheet" href="/css/experience/program-list.css">
-</head>
-<body>
-<header class="page-header">
-    <div class="header-inner">
-        <a class="brand" th:href="@{/main/main}">TRY-CATCH</a>
-        <nav class="header-nav">
-            <a th:href="@{/experience/list}">체험 프로그램</a>
-            <a th:href="@{/mypage/mypage}" th:if="${session.member != null}">마이페이지</a>
-            <a th:href="@{/main/log-in(re_url='/experience/list')}" th:if="${session.member == null}">로그인</a>
-        </nav>
-    </div>
-</header>
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>list</title>
+        <link rel="stylesheet" href="/static/css/experience/list.css">
+    </head>
+    <body class="hasNav" style="">
+        <div id="topArea">
+            <div class="topContent clear">
+                <h1 class="logo"><a href="/"><img src="/static/images/logo.png" alt="신입·인턴 채용관"></a></h1>
+                <ul class="topMenu">
+                    <li><a href="">채험정보</a></li>
+                    <li class="login on">
+                        <a href="" class="user" target="_blank"><em>이준수</em>님</a>
+                        <div class="subMenu" style="display: none;">
+                            <ul class="link">
+                                <li><strong><a href="" target="_blank">개인회원 홈</a></strong></li>
+                                <li><strong><a href="" target="_blank">내 기술블로그</a></strong></li>
+                                <li><strong><a href="" target="_blank">체험지원 현황</a></strong></li>
+                                <li><strong><a href="" target="_blank">개인정보 수정</a></strong></li>
+                                <li><strong><a href="">로그아웃</a></strong></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="TemplateWrap" class="">
+            <div id="RecruitArea" class="Recruit">
+                <div id="recruitWrap" class="">
+                    <div class="secContents" style="">
+                        <div class="lSecTitBx">
+                            <h2 class="secTit">채험공고</h2>
+                        </div>
 
-<main class="page-main">
-    <section class="search-section">
-        <h1>체험 프로그램</h1>
-        <p class="result-text" th:text="|총 ${programWithPaging.total}건|">총 0건</p>
+                        <form
+                            id="recruitSearchForm"
+                            name="recruitSearchForm"
+                            onsubmit="return false;"
+                        >
+                            <div class="recruitPartBx" style="">
+                                <div class="rndFilterBx">
+                                    <ul class="clear" area-type="bpart_no">
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="0"
+                                                class="on"
+                                            >
+                                                전체
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10026"
+                                                data-spartno=""
+                                                class=""
+                                            >
+                                                기획·전략
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10027"
+                                                data-spartno=""
+                                                class=""
+                                            >
+                                                법무·사무·총무
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10028"
+                                                data-spartno=""
+                                            >
+                                                인사·HR
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10029"
+                                                data-spartno=""
+                                            >
+                                                회계·세무
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10030"
+                                                data-spartno=""
+                                            >
+                                                마케팅·광고·MD
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10031"
+                                                data-spartno=""
+                                            >
+                                                AI·개발·데이터
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10032"
+                                                data-spartno=""
+                                            >
+                                                디자인
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10033"
+                                                data-spartno=""
+                                            >
+                                                물류·무역
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10034"
+                                                data-spartno=""
+                                            >
+                                                운전·운송·배송
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10035"
+                                                data-spartno=""
+                                            >
+                                                영업
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10036"
+                                                data-spartno=""
+                                            >
+                                                고객상담·TM
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10037"
+                                                data-spartno=""
+                                            >
+                                                금융·보험
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10038"
+                                                data-spartno=""
+                                            >
+                                                식·음료
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10039"
+                                                data-spartno=""
+                                            >
+                                                고객서비스·리테일
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10040"
+                                                data-spartno=""
+                                            >
+                                                엔지니어링·설계
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10041"
+                                                data-spartno=""
+                                            >
+                                                제조·생산
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10042"
+                                                data-spartno=""
+                                            >
+                                                교육
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10043"
+                                                data-spartno=""
+                                            >
+                                                건축·시설
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10044"
+                                                data-spartno=""
+                                            >
+                                                의료·바이오
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10045"
+                                                data-spartno=""
+                                            >
+                                                미디어·문화·스포츠
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                data-value="10046"
+                                                data-spartno=""
+                                            >
+                                                공공·복지
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <button
+                                        type="button"
+                                        id="extendSrch"
+                                        class="extendSrch"
+                                    >
+                                        상세검색 <i class="tmIco icoSrch"></i>
+                                    </button>
+                                </div>
 
-        <form class="search-form" method="get" th:action="@{/experience/list}">
-            <label>
-                상태
-                <select name="status">
-                    <option value="all" th:selected="${status == 'all'}">전체</option>
-                    <option value="recruiting" th:selected="${status == 'recruiting'}">모집중</option>
-                    <option value="draft" th:selected="${status == 'draft'}">진행중</option>
-                    <option value="closed" th:selected="${status == 'closed'}">모집마감</option>
-                    <option value="cancelled" th:selected="${status == 'cancelled'}">종료</option>
-                </select>
-            </label>
+                                <div class="detailFilterBx">
+                                    <div class="filter-wrap">
+                                        <div class="filterSec">
+                                            <ul
+                                                class="clear col2"
+                                                area-type="bpart_no"
+                                            >
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10026"
+                                                    >
+                                                        기획·전략
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10027"
+                                                    >
+                                                        법무·사무·총무
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10028"
+                                                    >
+                                                        인사·HR
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10029"
+                                                    >
+                                                        회계·세무
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10030"
+                                                    >
+                                                        마케팅·광고·MD
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10031"
+                                                    >
+                                                        AI·개발·데이터
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10032"
+                                                    >
+                                                        디자인
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10033"
+                                                    >
+                                                        물류·무역
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10034"
+                                                    >
+                                                        운전·운송·배송
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10035"
+                                                    >
+                                                        영업
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10036"
+                                                    >
+                                                        고객상담·TM
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10037"
+                                                    >
+                                                        금융·보험
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10038"
+                                                    >
+                                                        식·음료
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10039"
+                                                    >
+                                                        고객서비스·리테일
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10040"
+                                                    >
+                                                        엔지니어링·설계
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10041"
+                                                    >
+                                                        제조·생산
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10042"
+                                                    >
+                                                        교육
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10043"
+                                                    >
+                                                        건축·시설
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10044"
+                                                    >
+                                                        의료·바이오
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10045"
+                                                    >
+                                                        미디어·문화·스포츠
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="10046"
+                                                    >
+                                                        공공·복지
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="filterSec">
+                                            <ul
+                                                class="clear col3"
+                                                area-type="scd"
+                                            >
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="I000"
+                                                    >
+                                                        서울
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="B000"
+                                                    >
+                                                        경기
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="K000"
+                                                    >
+                                                        인천
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="G000"
+                                                    >
+                                                        대전
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="1000"
+                                                    >
+                                                        세종
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="O000"
+                                                    >
+                                                        충남
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="P000"
+                                                    >
+                                                        충북
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="E000"
+                                                    >
+                                                        광주
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="L000"
+                                                    >
+                                                        전남
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="M000"
+                                                    >
+                                                        전북
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="F000"
+                                                    >
+                                                        대구
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="D000"
+                                                    >
+                                                        경북
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="H000"
+                                                    >
+                                                        부산
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="J000"
+                                                    >
+                                                        울산
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="C000"
+                                                    >
+                                                        경남
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="A000"
+                                                    >
+                                                        강원
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="N000"
+                                                    >
+                                                        제주
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="Q000"
+                                                    >
+                                                        전국
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="filterSec">
+                                            <ul
+                                                class="clear col2"
+                                                area-type="job_type"
+                                            >
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="1"
+                                                    >
+                                                        정규직
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="2"
+                                                    >
+                                                        계약직
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="3"
+                                                    >
+                                                        인턴직
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="4"
+                                                    >
+                                                        파견직
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="6"
+                                                    >
+                                                        프리랜서
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="7"
+                                                    >
+                                                        아르바이트
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="9"
+                                                    >
+                                                        병역특례
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                            <hr />
+                                            <ul
+                                                class="clear col2"
+                                                area-type="career_type_code"
+                                            >
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="1/3"
+                                                    >
+                                                        신입
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="2/3"
+                                                    >
+                                                        경력
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="4"
+                                                    >
+                                                        경력무관
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="filterSec">
+                                            <ul
+                                                class="clear"
+                                                area-type="corp_type"
+                                            >
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="3"
+                                                    >
+                                                        대기업
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="4"
+                                                    >
+                                                        대기업 계열사·자회사
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="2"
+                                                    >
+                                                        중견기업
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="1"
+                                                    >
+                                                        중소기업
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="6/8"
+                                                    >
+                                                        외국계기업
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="7"
+                                                    >
+                                                        공공기관·공기업
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="5"
+                                                    >
+                                                        벤쳐기업
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        data-value="9"
+                                                    >
+                                                        비영리단체·교육재단
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!--[2022-06-07, 신상혁] 테마관 상세조회 개편-->
+                                    <div class="filter-selected">
+                                        <!--[DEV] selected-list 에 empty 클래스 추가 시 기본 텍스트 노출-->
+                                        <div class="selected-list">
+                                            <p
+                                                class="empty-text"
+                                                style="display: block"
+                                            >
+                                                검색 조건을 설정해 주세요
+                                            </p>
+                                            <ul class="keyword-list"></ul>
+                                        </div>
+                                        <div class="selected-control srchCtrl">
+                                            <button
+                                                type="button"
+                                                id="resetSrch"
+                                                class="resetSrch"
+                                            >
+                                                초기화<i
+                                                    class="tmIco icoReset"
+                                                ></i>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                id="closeSrch"
+                                                class="closeSrch"
+                                            >
+                                                닫기<i
+                                                    class="tmIco icoClose"
+                                                ></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sortBx clear">
+                                <p class="cntBx">
+                                    총<span id="recruitTotalCount">18,108</span
+                                    >건
+                                </p>
+                                <fieldset style="">
+                                    <legend>검색조건</legend>
+                                    <span class="typCell">
+                                        <input
+                                            type="radio"
+                                            id="rlistTab0"
+                                            name="rlistTab"
+                                            value="0"
+                                            initval="0"
+                                            checked="checked"
+                                        />
+                                        <label for="rlistTab0">전체</label>
+                                    </span>
+                                    <span class="typCell">
+                                        <input
+                                            type="radio"
+                                            id="rlistTab27"
+                                            name="rlistTab"
+                                            value="27"
+                                        />
+                                        <label for="rlistTab27"
+                                            >오늘 등록</label
+                                        >
+                                    </span>
+                                    <span class="typCell">
+                                        <input
+                                            type="radio"
+                                            id="rlistTab26"
+                                            name="rlistTab"
+                                            value="26"
+                                        />
+                                        <label for="rlistTab26"
+                                            >오늘 마감</label
+                                        >
+                                    </span>
+                                    <span class="selTyp">
+                                        <label for="rOrderTab" class="skip"
+                                            >정렬방식</label
+                                        >
+                                        <select
+                                            id="rOrderTab"
+                                            name="rOrderTab"
+                                            initval="1"
+                                        >
+                                            <option value="2">등록일순</option>
+                                            <option value="3">마감일순</option>
+                                            <option value="1">추천순</option>
+                                        </select>
+                                    </span>
+                                    <span class="inputTyp">
+                                        <input
+                                            type="text"
+                                            name="rSearchText"
+                                            class="input-search"
+                                            placeholder="기업명, 공고명 검색"
+                                        />
+                                        <button
+                                            type="button"
+                                            class="input-search-button"
+                                        >
+                                            <i class="tmIco icoSearch"></i>
+                                        </button>
+                                    </span>
+                                </fieldset>
+                            </div>
 
-            <label>
-                직무
-                <select name="job">
-                    <option value="" th:selected="${job == null or job == ''}">전체</option>
-                    <option th:each="jobItem : ${jobs}" th:value="${jobItem}" th:text="${jobItem}" th:selected="${job == jobItem}">직무</option>
-                </select>
-            </label>
+                            <input
+                                type="hidden"
+                                name="bpart_no"
+                                value="0"
+                                initval="0"
+                            />
+                            <input type="hidden" name="spart_no" value="" />
+                            <input
+                                type="hidden"
+                                name="scd"
+                                value=""
+                                initval=""
+                            />
+                            <input
+                                type="hidden"
+                                name="edu_no"
+                                value=""
+                                initval=""
+                            />
+                            <input
+                                type="hidden"
+                                name="pref"
+                                value=""
+                                initval=""
+                            />
+                            <input
+                                type="hidden"
+                                name="jtype"
+                                value=""
+                                initval=""
+                            />
+                            <input
+                                type="hidden"
+                                name="careerTypeCode"
+                                value=""
+                                initval=""
+                            />
+                            <input
+                                type="hidden"
+                                name="ctype"
+                                value=""
+                                initval=""
+                            />
+                            <input
+                                type="hidden"
+                                name="jobFilter"
+                                value="1"
+                                initval="1"
+                            />
+                            <input
+                                type="hidden"
+                                name="listDisplayCode"
+                                value="3"
+                                initval="3"
+                            />
+                            <input
+                                type="hidden"
+                                name="MainPageNo"
+                                value="1"
+                                initval="1"
+                            />
+                            <input
+                                type="hidden"
+                                name="FreePageNo"
+                                value="1"
+                                initval="1"
+                            />
+                            <input
+                                type="hidden"
+                                name="psTab"
+                                value="21"
+                                initval="21"
+                            />
+                            <input
+                                type="hidden"
+                                name="themeNo"
+                                value="169"
+                                initval="169"
+                            />
+                            <input
+                                type="hidden"
+                                name="tabNo"
+                                value="0"
+                                initval="0"
+                            />
+                            <input
+                                type="hidden"
+                                name="giDisplayCntLimitStat"
+                                value="0"
+                                initval="0"
+                            />
+                            <input
+                                type="hidden"
+                                name="GIOpenTypeCode"
+                                value="0"
+                            />
+                            <input type="hidden" name="pay" />
+                            <input type="hidden" name="pay_type_code" />
+                            <input
+                                type="hidden"
+                                name="IsPartCodeSearch"
+                                value="false"
+                            />
+                        </form>
 
-            <label>
-                정렬
-                <select name="sort">
-                    <option value="latest" th:selected="${sort == 'latest'}">최신순</option>
-                    <option value="views" th:selected="${sort == 'views'}">조회수순</option>
-                    <option value="deadline" th:selected="${sort == 'deadline'}">마감임박순</option>
-                </select>
-            </label>
-
-            <label>
-                검색
-                <input type="text" name="keyword" th:value="${keyword}" placeholder="공고명/기업명 검색">
-            </label>
-
-            <button type="submit">검색</button>
-        </form>
-    </section>
-
-    <section class="list-section" th:if="${!#lists.isEmpty(programWithPaging.programs)}">
-        <ul class="program-grid">
-            <li class="program-card" th:each="program : ${programWithPaging.programs}">
-                <a class="thumbnail" th:href="@{/experience/program/{id}(id=${program.id})}" th:with="thumb=${#lists.isEmpty(program.experienceProgramFiles) ? null : program.experienceProgramFiles.get(0)}">
-                    <img th:if="${thumb != null and thumb.fileContentType != null and thumb.fileContentType.name() == 'IMAGE'}"
-                         th:src="@{/api/files/display(filePath=${thumb.filePath}, fileName=${thumb.fileName})}"
-                         alt="프로그램 대표 이미지">
-                    <div class="thumb-placeholder" th:unless="${thumb != null and thumb.fileContentType != null and thumb.fileContentType.name() == 'IMAGE'}">NO IMAGE</div>
-                </a>
-
-                <div class="card-body">
-                    <div class="meta-row">
-                        <span class="corp-name" th:text="${program.corpCompanyName}">기업명</span>
-                        <span class="status-badge" th:switch="${program.experienceProgramStatus != null ? program.experienceProgramStatus.value : 'unknown'}">
-                            <span th:case="'recruiting'">모집중</span>
-                            <span th:case="'draft'">진행중</span>
-                            <span th:case="'closed'">모집마감</span>
-                            <span th:case="'cancelled'">종료</span>
-                            <span th:case="*">상태없음</span>
-                        </span>
-                    </div>
-
-                    <h2>
-                        <a th:href="@{/experience/program/{id}(id=${program.id})}" th:text="${program.experienceProgramTitle}">공고 제목</a>
-                    </h2>
-
-                    <p class="description" th:text="${program.descriptionText != null and !program.descriptionText.isEmpty() ? program.descriptionText : '상세 설명이 등록되지 않았습니다.'}">설명</p>
-
-                    <div class="info-row">
-                        <span th:text="${program.experienceProgramJob != null ? program.experienceProgramJob : '직무 미정'}">직무</span>
-                        <span th:text="|조회수 ${program.experienceProgramViewCount}|">조회수</span>
-                        <span th:text="${program.experienceProgramDeadline != null ? '마감 ' + program.experienceProgramDeadline : '마감일 미정'}">마감일</span>
+                        <!--주요 채험공고-->
                     </div>
                 </div>
-            </li>
-        </ul>
-    </section>
 
-    <section class="empty-section" th:if="${#lists.isEmpty(programWithPaging.programs)}">
-        조건에 맞는 체험 프로그램이 없습니다.
-    </section>
+                <div
+                    class="hireWrap"
+                    id="detailHireWrap"
+                    style="background-color: #fafafa"
+                >
+                    <div class="secContents">
+                        <!--일반 채험공고-->
+                        <div id="hireSearchList" class="tplJobListWrap">
+                            <div
+                                class="recruitList"
+                                data-totalcount="18108"
+                                data-totalcounttext="18,108"
+                            >
+                                <ul class="clear">
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/s/i/2976x00xxwzcjyf8282_3420abfaiaimh29512xa.gif?p=y&amp;hash=c"
+                                                        alt="㈜시민제과"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜시민제과
+                                                    </a>
 
-    <nav class="pagination" th:if="${programWithPaging.criteria.realEnd > 1}">
-        <a class="page-link"
-           th:if="${programWithPaging.criteria.page > 1}"
-           th:href="@{/experience/list(page=${programWithPaging.criteria.page - 1}, status=${status}, keyword=${keyword}, job=${job}, sort=${sort})}">‹</a>
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="27269424"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >시민제과 - 제빵팀
+                                                        제과,제빵사 모집</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
 
-        <a class="page-link"
-           th:each="pageNum : ${#numbers.sequence(programWithPaging.criteria.startPage, programWithPaging.criteria.endPage)}"
-           th:href="@{/experience/list(page=${pageNum}, status=${status}, keyword=${keyword}, job=${job}, sort=${sort})}"
-           th:text="${pageNum}"
-           th:classappend="${pageNum == programWithPaging.criteria.page} ? ' active'">1</a>
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/27</span
+                                                            >(금)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >제과제빵사 외</span
+                                                    >
+                                                </p>
 
-        <a class="page-link"
-           th:if="${programWithPaging.criteria.page < programWithPaging.criteria.realEnd}"
-           th:href="@{/experience/list(page=${programWithPaging.criteria.page + 1}, status=${status}, keyword=${keyword}, job=${job}, sort=${sort})}">›</a>
-    </nav>
-</main>
-</body>
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50306895"
+                                                    data-gno="48506645"
+                                                    data-memid="siminbk1949"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/i/r/2293d00damj6225_2720l7blo25622dl.gif?p=y&amp;hash=c"
+                                                        alt="㈜이레코리아"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜이레코리아
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="485025"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >2026년 상반기 각 부문별
+                                                        정규직 채용 (기계설계 ·
+                                                        생산...</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/28</span
+                                                            >(토)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >납품·배송기사 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50305942"
+                                                    data-gno="48505555"
+                                                    data-memid="ire4114"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/m/b/2615o00oulk85852_3020f8cfavs3698of.gif?p=y&amp;hash=c"
+                                                        alt="㈜엠바이지"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜엠바이지
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="15156494"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >항공기술연구소 및
+                                                        정비지원부 모집</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/28</span
+                                                            >(토)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >소프트웨어개발자
+                                                        외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50298822"
+                                                    data-gno="48497585"
+                                                    data-memid="mbyg0102"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/d/a/2976d00dqolkg2_2420p6apnzwcjdp.gif?p=y&amp;hash=c"
+                                                        alt="㈜다원산업"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜다원산업
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="136639"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >2026년 (주)다원산업 각
+                                                        부문별 채용</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/27</span
+                                                            >(금)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >기계엔지니어 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50301592"
+                                                    data-gno="48500635"
+                                                    data-memid="darwon"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/l/o/2615h00hemvdm012_3020w8cwghedm01hw.gif?p=y&amp;hash=c"
+                                                        alt="LOKINTERNATIONAL"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        LOKINTERNATIONAL
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="24154330"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >전기기술자 신입 및 경력
+                                                        직원 채용</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/28</span
+                                                            >(토)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >전기·전자엔지니어
+                                                        외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50302556"
+                                                    data-gno="48501661"
+                                                    data-memid="loklee77"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/k/b/2615m00mvetqqou2_3020f8cfaazjlqqmf.gif?p=y&amp;hash=c"
+                                                        alt="㈜경보제약"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜경보제약
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="303825"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >경보제약
+                                                        생산/분석연구/임상
+                                                        채용</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button class="rinfo-button button-apply" onclick="">
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/08</span
+                                                            >(일)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >경영·비즈니스기획
+                                                        외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50299681"
+                                                    data-gno="48498510"
+                                                    data-memid="kbpharma"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/s/h/2293n00nxgkuw86_2720z7bznwz622nz.gif?p=y&amp;hash=c"
+                                                        alt="㈜쇼엠인슈어런스"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜쇼엠인슈어런스
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="47707040"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >[인천 송도] 전산총무
+                                                        직원 채용</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/27</span
+                                                            >(금)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >사무담당자 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50298254"
+                                                    data-gno="48496837"
+                                                    data-memid="showm12"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/k/d/2615m00mvwg74982_3020z8czpsr7443mz.gif?p=y&amp;hash=c"
+                                                        alt="극동유화㈜"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        극동유화㈜
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="35265621"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >신입사원
+                                                        채험공고(윤활유
+                                                        생산팀)</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/06</span
+                                                            >(금)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >생산직종사자</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50295451"
+                                                    data-gno="48493690"
+                                                    data-memid="kdoc9923"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/s/t/2615c00cndm01982_3020k8ckhyc8559ck.gif?p=y&amp;hash=c"
+                                                        alt="태하메카트로닉스㈜"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        태하메카트로닉스㈜
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="303531"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >영업 부문 신입/경력직원
+                                                        모집</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~03/27</span
+                                                            >(금)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >무역사무원 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50295016"
+                                                    data-gno="48493220"
+                                                    data-memid="stex7025"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/w/c/2976z00zwkgbt2_2420i6aiokg48zi.gif?p=y&amp;hash=c"
+                                                        alt="오아시스마켓"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        오아시스마켓
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="20860515"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >오아시스 의왕 물류센터
+                                                        현장직 모집</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/10</span
+                                                            >(화)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >물류관리자 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50293870"
+                                                    data-gno="48491972"
+                                                    data-memid="wcoop7"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/a/l/2615q00qqdmqqdm2_3020h8cheetheetqh.gif?p=y&amp;hash=c"
+                                                        alt="㈜알렙"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜알렙
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="17703156"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >[알렙] 2026 새로운
+                                                        에피소드를 만들어갈
+                                                        `NEW멤버` 를 ...</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/15</span
+                                                            >(일)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >브랜드마케터 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50292965"
+                                                    data-gno="48490931"
+                                                    data-memid="alepalep"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/w/t/2459w00wmezac_2120v59vshe2wv.gif?p=y&amp;hash=c"
+                                                        alt="㈜월드튜브"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜월드튜브
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="6097"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >2026년 상반기 각 분야별
+                                                        채용
+                                                        (자재관리/생산관리)</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/28</span
+                                                            >(토)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >물류관리자 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50291272"
+                                                    data-gno="48489060"
+                                                    data-memid="wtube"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/i/n/2976a00aicjmh2_2420c6acjkgolac.gif?p=y&amp;hash=c"
+                                                        alt="㈜보령"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜보령
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="292028"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >2026 상반기 영업직(MR)
+                                                        신입 채용</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button class="rinfo-button button-apply" onclick="">
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/22</span
+                                                            >(일)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >마케팅기획 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50289774"
+                                                    data-gno="48487219"
+                                                    data-memid="innobr"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/b/s/2976m00mhaiuk2_2420x6axxxxxxmx.gif?p=y&amp;hash=c"
+                                                        alt="㈜BNK시스템"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜BNK시스템
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="99717"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >2026년 상반기 신입/경력
+                                                        채험공고</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button class="rinfo-button button-apply" onclick="">
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/08</span
+                                                            >(일)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >시스템엔지니어 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50289711"
+                                                    data-gno="48487152"
+                                                    data-memid="bsisys"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/i/s/2293d00damjxrmj_2720n7bnxmjmj2dn.gif?p=y&amp;hash=c"
+                                                        alt="아이엔제이컨설팅"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        아이엔제이컨설팅
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="39642773"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >고용노동부 2026년
+                                                        일터혁신 상생컨설팅 수행
+                                                        컨설턴트 ...</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/13</span
+                                                            >(금)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >경영·비즈니스기획
+                                                        외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50288403"
+                                                    data-gno="48485698"
+                                                    data-memid="iseejee"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/l/g/2976l00lswzol2_2420t6atppnvvlt.gif?p=y&amp;hash=c"
+                                                        alt="GS리테일"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        GS리테일
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="242684"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >[GS리테일] '26년 상반기
+                                                        경영지원본부 재경부문
+                                                        체험형 ...</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button class="rinfo-button button-apply" onclick="">
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            >모레마감</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >회계담당자 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50289096"
+                                                    data-gno="48486478"
+                                                    data-memid="lgmart"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/k/s/2615m00mvsrrdcn2_3020c8ccnsrijqqmc.gif?p=y&amp;hash=c"
+                                                        alt="강산건설㈜"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        강산건설㈜
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="13149124"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >강산건설㈜
+                                                        신입/경력사원 모집</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/06</span
+                                                            >(금)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >설계엔지니어 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50288199"
+                                                    data-gno="48485475"
+                                                    data-memid="ksccinsa"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/h/i/2615a00azdm98852_3020r8crdrd8560ar.gif?p=y&amp;hash=c"
+                                                        alt="(재)에이치아이정책연구원"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        (재)에이치아이정책연구원
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="10740"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >2026년 상반기
+                                                        채험공고(정책사업본부/문화연구센터)</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/20</span
+                                                            >(금)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >건축기사 외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50286196"
+                                                    data-gno="48483311"
+                                                    data-memid="hiei2006"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/l/s/2293e00eluwhvel_2720n7bnxmjqp2en.gif?p=y&amp;hash=c"
+                                                        alt="LS메탈㈜"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        LS메탈㈜
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="11855782"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >LS메탈 해외영업 사무직
+                                                        신입/경력 채용</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button class="rinfo-button button-apply" onclick="">
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/04</span
+                                                            >(수)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >경영·비즈니스기획
+                                                        외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50258838"
+                                                    data-gno="48451605"
+                                                    data-memid="lsmetal"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/s/a/2976x00xxrdnm2_2420p6apnkgolxp.gif?p=y&amp;hash=c"
+                                                        alt="㈜사조대림"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        ㈜사조대림
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="36633473"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >사조대림 2026년 상반기
+                                                        신입/경력 채용</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button class="rinfo-button button-apply" onclick="">
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            ><span
+                                                                class="tahoma"
+                                                                >~02/02</span
+                                                            >(월)</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >경영·비즈니스기획
+                                                        외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50251153"
+                                                    data-gno="48443045"
+                                                    data-memid="sajohr"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="listCell">
+                                            <p class="rLogo">
+                                                <a onclick="">
+                                                    <img
+                                                        src="//imgs.jobkorea.co.kr/Images/Logo/160/s/u/2615c00cnfaqqsr2_3020b8cbotwlkwgcb.gif?p=y&amp;hash=c"
+                                                        alt="청오에스떠블유"
+                                                        onerror="
+                                                            this.src =
+                                                                '//img.jobkorea.co.kr/Images/Logo/128/l/o/Logo_None_128.png'
+                                                        "
+                                                    />
+                                                </a>
+                                            </p>
+                                            <div class="listFoot">
+                                                <p class="rCor">
+                                                    <a
+                                                        target="_blank"
+                                                        class="corNm"
+                                                    >
+                                                        청오에스떠블유
+                                                    </a>
+
+                                                    <button
+                                                        type="button"
+                                                        class="devAddFavor tplBtnTy tplBtnFavOff dev-favor"
+                                                        data-mem-sys="50341673"
+                                                    >
+                                                        <span class="skip"
+                                                            >관심기업</span
+                                                        >
+                                                    </button>
+                                                </p>
+                                                <p class="rTit">
+                                                    <a
+                                                        onclick=""
+                                                        target="_blank"
+                                                        >[써브웨이] 정규직 각
+                                                        부문 채험공고</a
+                                                    >
+                                                </p>
+                                                <p class="rInfo">
+                                                    <button
+                                                        class="rinfo-button button-apply"
+                                                        onclick=""
+                                                    >
+                                                        <span>즉시지원</span>
+                                                    </button>
+
+                                                    <span class="rPeriod"
+                                                        ><span class="tahoma"
+                                                            >모레마감</span
+                                                        ></span
+                                                    >
+                                                    <span class="rPart"
+                                                        >경영·비즈니스기획
+                                                        외</span
+                                                    >
+                                                </p>
+
+                                                <button
+                                                    type="button"
+                                                    class="devAddScrap tplBtnTy dev-scrap dev-tplBtnScr-33408725 tplBtnScrOff"
+                                                    data-gino="50262408"
+                                                    data-gno="48455826"
+                                                    data-memid="subwayco"
+                                                    data-memtypecode="C"
+                                                >
+                                                    <span class="blind"
+                                                        >스크랩</span
+                                                    >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tplPagination newVer">
+                                <ul>
+                                    <li>
+                                        <span class="now" data-page="1">1</span>
+                                    </li>
+                                    <li>
+                                        <a data-page="2">2</a>
+                                    </li>
+                                    <li>
+                                        <a data-page="3">3</a>
+                                    </li>
+                                    <li>
+                                        <a data-page="4">4</a>
+                                    </li>
+                                    <li>
+                                        <a data-page="5">5</a>
+                                    </li>
+                                    <li>
+                                        <a data-page="6">6</a>
+                                    </li>
+                                    <li>
+                                        <a data-page="7">7</a>
+                                    </li>
+                                    <li>
+                                        <a data-page="8">8</a>
+                                    </li>
+                                    <li>
+                                        <a data-page="9">9</a>
+                                    </li>
+                                    <li>
+                                        <a data-page="10">10</a>
+                                    </li>
+                                </ul>
+
+                                <p>
+                                    <a class="tplBtn btnPgnNext" data-page="11"
+                                        >다음<i class="ico"></i
+                                    ></a>
+                                </p>
+                            </div>
+
+                            <script>
+                                (function () {
+                                    if (typeof jkcriteoEvt !== "undefined") {
+                                        jkcriteoEvt.gnolist = [
+                                            48506645, 48505555, 48497585,
+                                        ];
+                                        jkcriteoEvt.load();
+                                    }
+                                })();
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="RecruitCount">
+                    <input type="hidden" name="MainCount" value="" />
+                    <input type="hidden" name="HireCount" value="" />
+                </div>
+            </div>
+
+            <div class="intvwLy" id="intvwPopup">
+                <div class="dim"></div>
+                <div class="lyBody">
+                    <iframe
+                        src="about:blank"
+                        frameborder="0"
+                        scrolling="no"
+                        id="interviewFrame"
+                        title="직무인터뷰 상세"
+                    ></iframe>
+                </div>
+            </div>
+
+            
+        </div>
+        <ins
+            class="adsbygoogle adsbygoogle-noablate"
+            data-adsbygoogle-status="done"
+            style="display: none !important"
+            data-ad-status="unfilled"
+            ><div
+                id="aswift_0_host"
+                style="
+                    border: none;
+                    height: 0px;
+                    width: 0px;
+                    margin: 0px;
+                    padding: 0px;
+                    position: relative;
+                    visibility: visible;
+                    background-color: transparent;
+                    display: inline-block;
+                "
+            >
+        ></ins>
+
+        <div id="criteo-tags-div" style="display: none"></div>
+    </body>
+    <script src="/static/js/experience/list.js"></script>
 </html>
